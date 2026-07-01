@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferienimmobilien – Reine Payback-Analyse (2026)</title>
+<meta name="description" content="Ab wann spielt eine Ferienimmobilie ihre Anfangsinvestition allein aus dem Netto-Cashflow wieder ein? 6 EU-Märkte, AirROI-Daten, reiner Cashflow-Payback.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<style>
+:root{
+  --primary:#334e68; --primary-dark:#243b53; --primary-light:#486581;
+  --accent:#d4a017; --accent-light:#f6d76b;
+  --rag-red:#d9534f; --rag-amber:#f0ad4e; --rag-green:#5cb85c;
+  --rag-red-soft:#fde2e0; --rag-amber-soft:#fdf1d8; --rag-green-soft:#dff0d8;
+  --bg:#ffffff; --bg-soft:#f7f8fa; --bg-card:#ffffff;
+  --border:#e2e6ea; --text:#1f2933; --text-soft:#52606d; --code-bg:#f0f2f5;
+  --hl:#fff8e1;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1a202c; --bg-soft:#222b3a; --bg-card:#222b3a;
+    --border:#3a4556; --text:#e6ebf2; --text-soft:#aab4c2;
+    --code-bg:#2c3444; --primary:#7fa1c8; --primary-dark:#9db8d6;
+    --primary-light:#a8c2dd; --hl:#3a3520;
+    --rag-red-soft:#4a2a28; --rag-amber-soft:#4a3a20; --rag-green-soft:#2c4030;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;font-size:15px}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:var(--bg-soft);border-right:1px solid var(--border);padding:1.2rem 1rem;font-size:13.5px}
+nav.toc .brand{font-family:Georgia,serif;font-size:1.05rem;color:var(--primary-dark);font-weight:700;margin-bottom:.2rem}
+nav.toc .ver{display:inline-block;background:var(--accent);color:#3a2c00;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;margin-bottom:.9rem}
+nav.toc h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 .6rem;color:var(--text-soft)}
+nav.toc ol{list-style:none;padding:0;margin:0;counter-reset:toc}
+nav.toc ol li{counter-increment:toc;margin:.25rem 0}
+nav.toc ol li::before{content:counter(toc) ".";color:var(--text-soft);margin-right:.45rem;font-variant-numeric:tabular-nums}
+nav.toc a{color:var(--text);text-decoration:none;border-bottom:1px dotted transparent}
+nav.toc a:hover{color:var(--primary-dark);border-bottom-color:var(--primary-light)}
+main{max-width:1140px;margin:0 auto;padding:2rem 2.4rem 5rem;width:100%}
+section{margin:0 0 3.2rem;scroll-margin-top:.5rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.3rem;line-height:1.15;margin:.4rem 0 .5rem;color:var(--primary-dark)}
+.sub{font-size:1.05rem;color:var(--text-soft);margin:0 0 1.2rem}
+h2{font-size:1.6rem;margin:2.2rem 0 .8rem;border-bottom:2px solid var(--primary);padding-bottom:.3rem;color:var(--primary-dark)}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem;color:var(--primary-dark)}
+h4{font-size:1.02rem;margin:1.2rem 0 .4rem;color:var(--primary-dark)}
+p{margin:.55rem 0}
+ul,ol{padding-left:1.4rem}
+li{margin:.18rem 0}
+a{color:var(--primary-dark)}
+table{width:100%;border-collapse:collapse;margin:.6rem 0 1.2rem;font-size:13.8px}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--bg-soft);font-weight:600;color:var(--primary-dark)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:nth-child(even) td{background:var(--bg-soft)}
+tr.hlrow td{background:var(--hl)!important;font-weight:600}
+.kbd,code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px}
+.callout{border-left:4px solid var(--accent);background:var(--hl);padding:.85rem 1rem;margin:.9rem 0;border-radius:4px}
+.callout.crit{border-left-color:var(--rag-red);background:var(--rag-red-soft)}
+.callout.warn{border-left-color:var(--rag-amber);background:var(--rag-amber-soft)}
+.callout.good{border-left-color:var(--rag-green);background:var(--rag-green-soft)}
+.callout p{margin:.25rem 0}
+.callout strong{color:var(--primary-dark)}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.2rem 0}
+.verdict .v{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;border-top:6px solid var(--accent)}
+.verdict .v.gold{border-top-color:#d4a017}
+.verdict .v.silver{border-top-color:#9ca6b3}
+.verdict .v.bronze{border-top-color:#b87333}
+.verdict .label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft)}
+.verdict h3{margin:.2rem 0 .4rem;font-size:1.3rem}
+.verdict .row{display:flex;justify-content:space-between;font-size:13.5px;padding:2px 0;border-bottom:1px dashed var(--border)}
+.verdict .row:last-of-type{border-bottom:none}
+.verdict .big{font-size:1.5rem;font-weight:700;color:var(--primary-dark);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;padding:1px 8px;border-radius:11px;font-size:12px;font-weight:600;color:#fff}
+.chip.red{background:var(--rag-red)}
+.chip.amber{background:var(--rag-amber);color:#5a3d00}
+.chip.green{background:var(--rag-green)}
+.chip.gray{background:#6c7785}
+.chartbox{margin:.8rem 0 1.4rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem}
+.chartbox h4{margin-top:.2rem}
+.chartbox .cap{font-size:12.5px;color:var(--text-soft);margin:.2rem 0 .6rem}
+.chartbox canvas{display:block;width:100%!important;max-height:420px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin:1rem 0}
+.kpi .k{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.75rem .85rem}
+.kpi .k .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
+.kpi .k .val{font-size:1.5rem;font-weight:700;color:var(--primary-dark);font-variant-numeric:tabular-nums;margin-top:.1rem}
+.kpi .k .sub{font-size:12px;color:var(--text-soft)}
+.formula{background:var(--code-bg);padding:.7rem .9rem;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap;margin:.5rem 0;overflow-x:auto}
+details.glossary{background:var(--bg-soft);border:1px solid var(--border);border-radius:6px;padding:.6rem .85rem;margin:.4rem 0}
+details.glossary summary{cursor:pointer;font-weight:600;color:var(--primary-dark)}
+details.glossary[open] summary{margin-bottom:.4rem}
+.actionlist{list-style:none;padding-left:0}
+.actionlist li{margin:.4rem 0;padding-left:1.7rem;position:relative}
+.actionlist li::before{content:"\2610";position:absolute;left:0;color:var(--primary);font-size:1.1rem;top:-2px}
+.disclaimer{background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;font-size:12.5px;color:var(--text-soft);margin-top:2rem}
+.removed{background:var(--rag-red-soft);border:1px solid var(--rag-red);border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+.removed h4{margin:.1rem 0 .5rem;color:var(--primary-dark)}
+.removed ul{margin:.3rem 0}
+.topbar-mobile{display:none}
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  nav.toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  main{padding:1.2rem 1.1rem 4rem}
+  h1{font-size:1.8rem}
+  table{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc">
+  <div class="brand">Ferienimmobilien</div>
+  <span class="ver">v3.1 · Reine Payback-Analyse</span>
+  <h2>Inhalt</h2>
+  <ol>
+    <li><a href="#summary">Executive Summary</a></li>
+    <li><a href="#method">Methodik &amp; Definition</a></li>
+    <li><a href="#screening">Marktscreening (28 Städte)</a></li>
+    <li><a href="#regulatory">Regulatorik &amp; Steuern</a></li>
+    <li><a href="#climate">Klima-Risiken bis 2040</a></li>
+    <li><a href="#scoring">Scoring-Matrix</a></li>
+    <li><a href="#payback">Payback Deep Dive</a></li>
+    <li><a href="#recommendation">Empfehlung &amp; Exit</a></li>
+    <li><a href="#actions">Sofort-Aktionen</a></li>
+    <li><a href="#limits">Limits &amp; Quellen</a></li>
+  </ol>
+</nav>
+
+<main>
+<header>
+  <h1>Ferienimmobilien&nbsp;– Reine Payback-Analyse</h1>
+  <p class="sub">Ab wann spielt eine Ferienimmobilie ihre gesamte Anfangsinvestition allein aus dem laufenden Netto-Cashflow wieder ein? &nbsp;·&nbsp; 6 EU-Märkte · AirROI-Daten TTM Apr&nbsp;2025–Apr&nbsp;2026 · Stand Juli&nbsp;2026</p>
+  <div class="callout">
+    <p><strong>Die eine Frage:</strong> Wie viele Jahre reiner Mieteinnahmen braucht es, bis Kaufpreis&nbsp;+&nbsp;Closing&nbsp;+&nbsp;Möblierung wieder zurück sind? Kein ETF, kein Compounding, keine Kapitalmarkt-Annahme — nur die Fundamentaldaten der Immobilie.</p>
+  </div>
+</header>
+
+<!-- ============ 1. SUMMARY ============ -->
+<section id="summary">
+<h2>1 · Executive Summary</h2>
+
+<div class="kpi">
+  <div class="k"><div class="lbl">Top-Pick</div><div class="val">Albufeira</div><div class="sub">Algarve, Portugal</div></div>
+  <div class="k"><div class="lbl">Netto-Anfangsrendite</div><div class="val">9,7&nbsp;%</div><div class="sub">höchste im Feld</div></div>
+  <div class="k"><div class="lbl">Cashflow-Payback</div><div class="val">Jahr 10</div><div class="sub">nur aus Mieteinnahmen</div></div>
+  <div class="k"><div class="lbl">Break-even mit Verkauf</div><div class="val">Jahr 2</div><div class="sub">Asset bleibt verkäuflich</div></div>
+</div>
+
+<div class="verdict">
+  <div class="v gold">
+    <div class="label">🥇 Schnellster Payback</div>
+    <h3>Albufeira</h3>
+    <div class="row"><span>Anfangsinvestition</span><span>288.750 €</span></div>
+    <div class="row"><span>Netto-CF Jahr 1</span><span>28.131 €</span></div>
+    <div class="row"><span>Netto-Rendite</span><span>9,7 %</span></div>
+    <div class="row"><span>Payback</span><span class="big">Jahr 10</span></div>
+  </div>
+  <div class="v silver">
+    <div class="label">🥈 Kapital-effizient</div>
+    <h3>Ostuni</h3>
+    <div class="row"><span>Anfangsinvestition</span><span>217.400 €</span></div>
+    <div class="row"><span>Netto-CF Jahr 1</span><span>19.174 €</span></div>
+    <div class="row"><span>Netto-Rendite</span><span>8,8 %</span></div>
+    <div class="row"><span>Payback</span><span class="big">Jahr 11</span></div>
+  </div>
+  <div class="v bronze">
+    <div class="label">🥉 Geringstes Kapital</div>
+    <h3>Rethymno</h3>
+    <div class="row"><span>Anfangsinvestition</span><span>174.000 €</span></div>
+    <div class="row"><span>Netto-CF Jahr 1</span><span>12.784 €</span></div>
+    <div class="row"><span>Netto-Rendite</span><span>7,3 %</span></div>
+    <div class="row"><span>Payback</span><span class="big">Jahr 13</span></div>
+  </div>
+</div>
+
+<div class="chartbox">
+  <h4>Cashflow-Payback in Jahren — sortiert nach Geschwindigkeit</h4>
+  <p class="cap">Kleinstes Jahr N, in dem der kumulierte Netto-Cashflow ≥ Anfangsinvestition. Kürzer = besser.</p>
+  <canvas id="chartPayback" height="230"></canvas>
+</div>
+
+<h3>Master-Vergleich (alle 6 Kandidaten)</h3>
+<table>
+<thead><tr>
+  <th>Stadt</th><th class="num">Total Initial</th><th class="num">Netto-CF Y1</th>
+  <th class="num">Netto-Rendite</th><th class="num">Cashflow-Payback</th><th class="num">+ mit Verkauf</th><th class="num">Kum. CF 20 J.</th>
+</tr></thead>
+<tbody>
+  <tr class="hlrow"><td>Albufeira</td><td class="num">288.750 €</td><td class="num">28.131 €</td><td class="num">9,7 %</td><td class="num">Jahr 10</td><td class="num">Jahr 2</td><td class="num">~644.000 €</td></tr>
+  <tr><td>Ostuni</td><td class="num">217.400 €</td><td class="num">19.174 €</td><td class="num">8,8 %</td><td class="num">Jahr 11</td><td class="num">Jahr 3</td><td class="num">~441.000 €</td></tr>
+  <tr><td>Rethymno</td><td class="num">174.000 €</td><td class="num">12.784 €</td><td class="num">7,3 %</td><td class="num">Jahr 13</td><td class="num">Jahr 3</td><td class="num">~294.000 €</td></tr>
+  <tr><td>Chania</td><td class="num">206.400 €</td><td class="num">14.569 €</td><td class="num">7,1 %</td><td class="num">Jahr 13–14</td><td class="num">Jahr 3</td><td class="num">~335.000 €</td></tr>
+  <tr><td>Lagos</td><td class="num">266.900 €</td><td class="num">14.931 €</td><td class="num">5,6 %</td><td class="num">Jahr 16–17</td><td class="num">Jahr 3</td><td class="num">~343.000 €</td></tr>
+  <tr><td>Polignano</td><td class="num">240.000 €</td><td class="num">10.746 €</td><td class="num">4,5 %</td><td class="num">Jahr 19–20</td><td class="num">Jahr 4</td><td class="num">~246.000 €</td></tr>
+</tbody>
+</table>
+
+<div class="callout good"><p><strong>1 · Payback = Netto-Anfangsrendite.</strong> Ohne das ETF-Compounding fällt die Rangfolge exakt auf die Netto-Anfangsrendite zurück. Wer schnell sein Geld zurück will, kauft dort, wo der Jahres-Cashflow relativ zum Kaufpreis am höchsten ist. Albufeira (9,7 %) und Ostuni (8,8 %) führen klar.</p></div>
+<div class="callout"><p><strong>2 · Rethymno überholt Chania.</strong> Bei reiner Payback-Rechnung schiebt sich das kapital-effizientere Rethymno (174k Initial) knapp vor Chania. In der ETF-Variante (v3) war es umgekehrt — dieser Effekt fällt jetzt weg. Chanias Argument ist nicht der Payback, sondern das beste Klimaprofil (Risk 4,3) für einen Long-Hold.</p></div>
+<div class="callout warn"><p><strong>3 · Lagos &amp; Polignano sind Payback-Nachzügler.</strong> 5,6 % bzw. 4,5 % Netto-Rendite bedeuten 16–20 Jahre reiner Cashflow-Payback. Beide rechnen sich nur über den Wiederverkauf, nicht über die Miete.</p></div>
+</section>
+
+<!-- ============ 2. METHOD ============ -->
+<section id="method">
+<h2>2 · Methodik &amp; Definition</h2>
+
+<h3>Kern-Definition (nominal, undiskontiert)</h3>
+<div class="formula">Kumulierter Cashflow bis Jahr N:  CumCF_N = Σ CF_i   (i = 1 … N)
+Cashflow-Payback = kleinstes N mit  CumCF_N ≥ Anfangsinvestition</div>
+<p>Kein <code>(1+r)</code>-Faktor, keine Reinvestition — jeder Euro Cashflow zählt genau als ein Euro. Der Payback hängt damit <em>nur</em> an den Fundamentaldaten der Immobilie (Netto-Miete ÷ Investitionssumme) und macht keine Annahme über einen Kapitalmarkt, den niemand kontrolliert.</p>
+
+<div class="removed">
+  <h4>Was gegenüber v3 (MSCI-EM-Payback) entfernt wurde</h4>
+  <ul>
+    <li>❌ <strong>MSCI-EM-Reinvest-Logik</strong> — Cashflow fließt in keinen ETF, er wird schlicht kumuliert.</li>
+    <li>❌ <strong>CAGR-Szenarien (5 % / 7 % / 9 %)</strong> — kein Compounding, also keine Bandbreite nötig.</li>
+    <li>❌ <strong>Geopolitik-These</strong> (US-Housing, AI-Blase, Hormuz/Petrodollar) — gehört zur Frage „wohin mit dem Cashflow", nicht zur Payback-Frage.</li>
+    <li>❌ <strong>Vermögens-Projektionen über den ETF-Topf</strong> — ersetzt durch die kumulierte Cashflow-Summe.</li>
+  </ul>
+  <p style="margin:.4rem 0 0"><strong>Beibehalten:</strong> Marktscreening, Regulatorik/Steuern, Klima-Risiken, Scoring-Matrix, Deep Dives, Exit-Strategie — versionsunabhängig und weiter gültig.</p>
+</div>
+
+<h3>Zweite Kennzahl: Break-even mit Verkauf</h3>
+<div class="formula">NetSale_N = Kaufpreis × 1,02^N × 0,95 − Spek.-Steuer (35 % auf Gewinn, nur wenn N < 10)
+Break-even = kleinstes N mit  CumCF_N + NetSale_N ≥ Anfangsinvestition</div>
+<p>Diese Kennzahl liegt bei allen Städten früh (Jahr 2–4). Kein Trick: Die Immobilie behält ihren Wert, du könntest sie fast jederzeit für ~den Kaufpreis wieder verkaufen. Das eigentliche „Risiko-Kapital", das <em>nur</em> der Cashflow zurückholen muss, sind Closing-Kosten + Möblierung (~35–40k) — der Kaufpreis steckt im verkäuflichen Asset.</p>
+
+<h3>Zentrale Annahmen</h3>
+<table>
+<thead><tr><th>Größe</th><th>Annahme</th><th>Begründung</th></tr></thead>
+<tbody>
+<tr><td>ADR-Wachstum</td><td>+2 % p.a.</td><td>EU-Inflation post-2024</td></tr>
+<tr><td>Occupancy</td><td>flat (Y1 = Y20)</td><td>konservativ</td></tr>
+<tr><td>OpEx-Wachstum</td><td>+3 % p.a.</td><td>Cleaning/Wages &gt; CPI</td></tr>
+<tr><td>Netto-CF-Wachstum</td><td>~+1,4 % p.a.</td><td>Netto-Effekt aus ADR/OpEx/Occ</td></tr>
+<tr><td>Closing Costs</td><td>PT 9,5 % · GR 8 % · IT 13 %</td><td>Marktstandard 2026</td></tr>
+<tr><td>Möblierung</td><td>12–15k €</td><td>One-Off, 60–80 m²</td></tr>
+<tr><td>Property Appreciation</td><td>2 % p.a. nominal</td><td>nur für „Break-even mit Verkauf"</td></tr>
+<tr><td>Spekulationsfrist DE</td><td>10 J., danach steuerfrei</td><td>§ 23 EStG</td></tr>
+</tbody>
+</table>
+
+<details class="glossary">
+<summary>Glossar (wichtigste Begriffe)</summary>
+<table>
+<tbody>
+<tr><td><strong>Netto-Anfangsrendite</strong></td><td>Netto-CF Jahr 1 ÷ Total Investment. Stärkster Prädiktor für den Payback-Zeitpunkt.</td></tr>
+<tr><td><strong>Cashflow-Payback</strong></td><td>Kleinstes Jahr N, in dem die Summe aller Netto-Cashflows ≥ Anfangsinvestition. Undiskontiert.</td></tr>
+<tr><td><strong>ADR / Occupancy / RevPAR</strong></td><td>Ø Nightly Rate / Belegungsquote / Revenue per Available Room (ADR × Occ).</td></tr>
+<tr><td><strong>OpEx</strong></td><td>Cleaning, Property Management, Utilities, Versicherung, Reparatur, Reisekosten.</td></tr>
+<tr><td><strong>AL / AMA / CIN</strong></td><td>STR-Lizenz/Registry Portugal / Griechenland / Italien.</td></tr>
+<tr><td><strong>Cedolare Secca</strong></td><td>Italienische Pauschalsteuer 21 % auf Brutto-Mieteinnahmen.</td></tr>
+<tr><td><strong>Spekulationsfrist</strong></td><td>10-J.-Haltefrist (§ 23 EStG); danach Veräußerungsgewinn in DE steuerfrei.</td></tr>
+<tr><td><strong>Hot Days</strong></td><td>Tage/Jahr mit Tmax ≥ 35 °C (ERA5 / CMIP6). Indikator für Klimastress.</td></tr>
+</tbody>
+</table>
+</details>
+</section>
+
+<!-- ============ 3. SCREENING ============ -->
+<section id="screening">
+<h2>3 · Marktscreening — 28 Städte (TTM Apr 2025 – Apr 2026)</h2>
+<p>Datenquelle: AirROI MCP. Die 6 Finalisten sind hervorgehoben.</p>
+
+<h3>Portugal (Algarve + Lisboa)</h3>
+<table>
+<thead><tr><th>Stadt</th><th class="num">ADR</th><th class="num">Occ</th><th class="num">RevPAR</th><th class="num">Annual Rev.</th><th class="num">Listings</th><th>Notiz</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>Albufeira</td><td class="num">278,9 €</td><td class="num">49 %</td><td class="num">137 €</td><td class="num">49.890 €</td><td class="num">4.812</td><td>Marktführer Algarve</td></tr>
+<tr class="hlrow"><td>Lagos</td><td class="num">178,0 €</td><td class="num">48 %</td><td class="num">85 €</td><td class="num">31.211 €</td><td class="num">2.345</td><td>Surfer-Markt, weniger volatil</td></tr>
+<tr><td>Faro</td><td class="num">165,5 €</td><td class="num">41 %</td><td class="num">67,9 €</td><td class="num">24.769 €</td><td class="num">1.456</td><td>Flughafennähe, mid-tier</td></tr>
+<tr><td>Vilamoura</td><td class="num">312,4 €</td><td class="num">51 %</td><td class="num">159,3 €</td><td class="num">58.131 €</td><td class="num">1.823</td><td>Luxus, Tourist-Schwere</td></tr>
+<tr><td>Lisboa Centro</td><td class="num">178,2 €</td><td class="num">65 %</td><td class="num">115,8 €</td><td class="num">42.270 €</td><td class="num">13.456</td><td><span class="chip red">AL-Stop</span> seit 2024</td></tr>
+</tbody>
+</table>
+
+<h3>Griechenland (Crete + Cyclades)</h3>
+<table>
+<thead><tr><th>Stadt</th><th class="num">ADR</th><th class="num">Occ</th><th class="num">RevPAR</th><th class="num">Annual Rev.</th><th class="num">Listings</th><th>Notiz</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>Chania</td><td class="num">142,3 €</td><td class="num">51 %</td><td class="num">72,6 €</td><td class="num">26.489 €</td><td class="num">3.124</td><td>Süd-Westkreta, junger Markt</td></tr>
+<tr class="hlrow"><td>Rethymno</td><td class="num">160,0 €</td><td class="num">44 %</td><td class="num">70,4 €</td><td class="num">25.696 €</td><td class="num">1.987</td><td>Familien-Markt</td></tr>
+<tr><td>Heraklion</td><td class="num">121,5 €</td><td class="num">48 %</td><td class="num">58,3 €</td><td class="num">21.287 €</td><td class="num">4.567</td><td>Stadt-affin, weniger Premium</td></tr>
+<tr><td>Santorin</td><td class="num">412 €</td><td class="num">73 %</td><td class="num">300,8 €</td><td class="num">109.792 €</td><td class="num">1.234</td><td>Top-Yield, aber 4-Monats-Saison</td></tr>
+<tr><td>Mykonos</td><td class="num">545 €</td><td class="num">71 %</td><td class="num">386,9 €</td><td class="num">141.219 €</td><td class="num">891</td><td>Ultra-Luxury, 600k+ € Invest</td></tr>
+</tbody>
+</table>
+
+<h3>Italien (Puglia + Sizilien)</h3>
+<table>
+<thead><tr><th>Stadt</th><th class="num">ADR</th><th class="num">Occ</th><th class="num">RevPAR</th><th class="num">Annual Rev.</th><th class="num">Listings</th><th>Notiz</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>Ostuni</td><td class="num">244,9 €</td><td class="num">39 %</td><td class="num">95,5 €</td><td class="num">34.861 €</td><td class="num">712</td><td>„Città Bianca", Schmuckstück</td></tr>
+<tr class="hlrow"><td>Polignano a Mare</td><td class="num">182,0 €</td><td class="num">40 %</td><td class="num">72,8 €</td><td class="num">26.572 €</td><td class="num">489</td><td>Premium-Mikro-Markt</td></tr>
+<tr><td>Monopoli</td><td class="num">168,3 €</td><td class="num">42 %</td><td class="num">70,7 €</td><td class="num">25.806 €</td><td class="num">567</td><td>Geheimtipp, Polignano-Alternative</td></tr>
+<tr><td>Taormina</td><td class="num">312 €</td><td class="num">55 %</td><td class="num">171,6 €</td><td class="num">62.624 €</td><td class="num">645</td><td><span class="chip amber">Vulkan-Risk</span> + Touristen-Sat</td></tr>
+</tbody>
+</table>
+
+<p><strong>Verworfen:</strong> Spanien (Alicante/Denia/Malaga — Lizenz-Moratorium seit 2024), Bali (Perda 4/2026 kriminalisiert Nominee-Strukturen), Cyprus (Title-Deeds-Verzögerungen + Wasserkrise), Mexico Tulum (Occ 33 %, Sargassum), Marrakech (Polit-Risk).</p>
+</section>
+
+<!-- ============ 4. REGULATORY ============ -->
+<section id="regulatory">
+<h2>4 · Regulatorik &amp; Steuern</h2>
+<div class="verdict">
+  <div class="v" style="border-top-color:#046a38">
+    <div class="label">🇵🇹 Portugal (Algarve)</div>
+    <div class="row"><span>Lizenz</span><span>AL — weiter offen</span></div>
+    <div class="row"><span>Closing Costs</span><span>~9,5 %</span></div>
+    <div class="row"><span>Income Tax</span><span>Categoria B (~25 %)</span></div>
+    <div class="row"><span>DBA mit DE</span><span>Freistellung ✓</span></div>
+    <div class="row"><span>Modell-Steuersatz</span><span>25 % auf NOI</span></div>
+  </div>
+  <div class="v" style="border-top-color:#0d5eaf">
+    <div class="label">🇬🇷 Griechenland (Kreta)</div>
+    <div class="row"><span>Lizenz</span><span>AMA (Law 5170/2025)</span></div>
+    <div class="row"><span>Closing Costs</span><span>~8 %</span></div>
+    <div class="row"><span>Income Tax</span><span>15–45 %, eff. ~22 %</span></div>
+    <div class="row"><span>DBA mit DE</span><span>Freistellung ✓</span></div>
+    <div class="row"><span>Modell-Steuersatz</span><span>22 % auf NOI</span></div>
+  </div>
+  <div class="v" style="border-top-color:#008C45">
+    <div class="label">🇮🇹 Italien (Puglia)</div>
+    <div class="row"><span>Lizenz</span><span>CIN (seit 2024)</span></div>
+    <div class="row"><span>Closing Costs</span><span>~13 % (höchste)</span></div>
+    <div class="row"><span>Income Tax</span><span>Cedolare Secca 21 %</span></div>
+    <div class="row"><span>DBA mit DE</span><span>Freistellung ✓</span></div>
+    <div class="row"><span>Modell-Steuersatz</span><span>21 % auf Brutto</span></div>
+  </div>
+</div>
+<p>Alle drei Länder haben die EU-VO 2024/1028 (Short-Term-Rental-Registry, wirksam 20.05.2026) bereits umgesetzt. Deutschland stellt Mieteinkünfte aus EU-Immobilien via DBA frei (Progressionsvorbehalt). Nach 10 Jahren Haltedauer ist der Veräußerungsgewinn in DE steuerfrei (§ 23 EStG).</p>
+</section>
+
+<!-- ============ 5. CLIMATE ============ -->
+<section id="climate">
+<h2>5 · Klima-Risiken bis 2040</h2>
+<div class="callout warn"><p><strong>Schon heute, nicht 2040:</strong> Polignano hat bereits <strong>10,3 Hot-Days/Jahr</strong> (Tmax ≥ 35 °C), Albufeira 9,3. Chania kommt mit nur <strong>1,4</strong> aus — das resilienteste Profil im Feld. Rethymnos Niederschlag fiel um <strong>-25,7 %</strong> (2015→2024): Wasserstress-Warnsignal.</p></div>
+
+<div class="chartbox">
+  <h4>Climate-Risk-Score der 6 Kandidaten (1 = best, 10 = worst)</h4>
+  <p class="cap">Composite aus Hot-Days (historisch + 2040-Projektion), Niederschlags-Trend, Küstenerosion, Wasser-Stress.</p>
+  <canvas id="chartClimate" height="200"></canvas>
+</div>
+
+<table>
+<thead><tr><th>Stadt</th><th class="num">Hot-Days hist.</th><th class="num">Hot-Days 2040</th><th>Niederschlag</th><th>Wasser-Stress</th><th class="num">Climate-Risk</th></tr></thead>
+<tbody>
+<tr><td>Chania</td><td class="num">1,4</td><td class="num">3,8</td><td>-8 %</td><td>Niedrig</td><td class="num"><span class="chip green">4,3</span></td></tr>
+<tr><td>Albufeira</td><td class="num">9,3</td><td class="num">10,5</td><td>-12 %</td><td>Mittel</td><td class="num"><span class="chip green">4,7</span></td></tr>
+<tr><td>Lagos</td><td class="num">3,6</td><td class="num">4,5</td><td>-14 %</td><td>Mittel</td><td class="num"><span class="chip green">4,9</span></td></tr>
+<tr><td>Ostuni</td><td class="num">7,0</td><td class="num">13,0</td><td>-11 %</td><td>Mittel-Hoch</td><td class="num"><span class="chip amber">5,6</span></td></tr>
+<tr><td>Polignano</td><td class="num">10,3</td><td class="num">16,5</td><td>-8 %</td><td>Mittel-Hoch</td><td class="num"><span class="chip amber">6,0</span></td></tr>
+<tr><td>Rethymno</td><td class="num">5,5</td><td class="num">11,0</td><td>-25,7 %</td><td>Hoch</td><td class="num"><span class="chip amber">6,1</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 6. SCORING ============ -->
+<section id="scoring">
+<h2>6 · Scoring-Matrix (Composite 0–100)</h2>
+<p>Gewichtung: Net Yield 30 %, Occupancy-Stabilität 15 %, Regulatorik 15 %, Käufer-Liquidität 10 %, PM-Verfügbarkeit 10 %, Klima-Resilienz 15 %, Wachstum 5 %.</p>
+<table>
+<thead><tr><th>Stadt</th><th class="num">Net Yield</th><th class="num">Occ-Stab</th><th class="num">Reg.</th><th class="num">Liquid.</th><th class="num">PM</th><th class="num">Klima</th><th class="num">Score</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>Albufeira</td><td class="num">10</td><td class="num">9</td><td class="num">9</td><td class="num">9</td><td class="num">10</td><td class="num">6</td><td class="num">80</td></tr>
+<tr><td>Lagos</td><td class="num">8</td><td class="num">8</td><td class="num">9</td><td class="num">8</td><td class="num">9</td><td class="num">6</td><td class="num">70</td></tr>
+<tr><td>Chania</td><td class="num">8</td><td class="num">8</td><td class="num">8</td><td class="num">7</td><td class="num">7</td><td class="num">8</td><td class="num">68</td></tr>
+<tr><td>Rethymno</td><td class="num">8</td><td class="num">7</td><td class="num">8</td><td class="num">6</td><td class="num">6</td><td class="num">5</td><td class="num">56</td></tr>
+<tr><td>Polignano</td><td class="num">6</td><td class="num">6</td><td class="num">8</td><td class="num">7</td><td class="num">7</td><td class="num">5</td><td class="num">55</td></tr>
+<tr><td>Ostuni</td><td class="num">7</td><td class="num">6</td><td class="num">8</td><td class="num">6</td><td class="num">6</td><td class="num">5</td><td class="num">52</td></tr>
+</tbody>
+</table>
+<div class="callout"><p>Der Score gewichtet Klima, Regulatorik und Liquidität mit — er ist <strong>nicht identisch</strong> mit dem reinen Payback-Ranking, das allein an der Netto-Anfangsrendite hängt. Payback sagt <em>wie schnell zurück</em>, Score sagt <em>wie robust über die Haltedauer</em>. Beide zusammenlesen.</p></div>
+</section>
+
+<!-- ============ 7. PAYBACK DEEP DIVE ============ -->
+<section id="payback">
+<h2>7 · Reiner Cashflow-Payback — Deep Dive</h2>
+<p>Jeder Netto-Cashflow wird schlicht aufsummiert. Wir suchen das Jahr, in dem die kumulierte Summe die Anfangsinvestition erreicht. Keine Reinvestition, kein Zins.</p>
+
+<div class="chartbox">
+  <h4>Kumulierter Netto-Cashflow über 20 Jahre</h4>
+  <p class="cap">Jede Kurve ist eine Stadt. Der Payback ist erreicht, wenn die Kurve die (gleichfarbige, gestrichelte) Linie ihrer Anfangsinvestition schneidet.</p>
+  <canvas id="chartCumCF" height="300"></canvas>
+</div>
+
+<h3>Payback-Punkte je Stadt</h3>
+<table>
+<thead><tr><th>Stadt</th><th class="num">Initial</th><th class="num">Netto-Rendite</th><th class="num">Cashflow-Payback</th><th>Kommentar</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>Albufeira</td><td class="num">288.750 €</td><td class="num">9,7 %</td><td class="num">Jahr 10</td><td>Höchste Rendite → schnellster Payback</td></tr>
+<tr><td>Ostuni</td><td class="num">217.400 €</td><td class="num">8,8 %</td><td class="num">Jahr 11</td><td>Fast gleiches Profil für 71k weniger Einsatz</td></tr>
+<tr><td>Rethymno</td><td class="num">174.000 €</td><td class="num">7,3 %</td><td class="num">Jahr 13</td><td>Kapital-effizientester Einstieg; Wasserkrise beachten</td></tr>
+<tr><td>Chania</td><td class="num">206.400 €</td><td class="num">7,1 %</td><td class="num">Jahr 13–14</td><td>Argument ist das Klima (4,3), nicht der Payback</td></tr>
+<tr><td>Lagos</td><td class="num">266.900 €</td><td class="num">5,6 %</td><td class="num">Jahr 16–17</td><td>Wertzuwachs-Play, kein Cashflow-Play</td></tr>
+<tr><td>Polignano</td><td class="num">240.000 €</td><td class="num">4,5 %</td><td class="num">Jahr 19–20</td><td>Rechnet sich nur über den Verkauf</td></tr>
+</tbody>
+</table>
+
+<h3>Sensitivität: Diskontierter Payback (Opportunitätskosten)</h3>
+<p>Der nominale Payback ignoriert den Zeitwert des Geldes. Bei <strong>3 % Diskontierung</strong> als Orientierung:</p>
+<table>
+<thead><tr><th>Stadt</th><th class="num">Nominal</th><th class="num">Diskontiert @ 3 %</th></tr></thead>
+<tbody>
+<tr><td>Albufeira</td><td class="num">Jahr 10</td><td class="num">~Jahr 12</td></tr>
+<tr><td>Ostuni</td><td class="num">Jahr 11</td><td class="num">~Jahr 13</td></tr>
+<tr><td>Rethymno / Chania</td><td class="num">Jahr 13–14</td><td class="num">~Jahr 16</td></tr>
+<tr><td>Lagos</td><td class="num">Jahr 16–17</td><td class="num">~Jahr 20+</td></tr>
+<tr><td>Polignano</td><td class="num">Jahr 19–20</td><td class="num">kein Payback &lt; 20 J.</td></tr>
+</tbody>
+</table>
+<div class="callout"><p>Diskontierung schiebt den Payback um 1–3 Jahre nach hinten und trifft die schwachen Kandidaten am härtesten. Für die Top-2 (Albufeira, Ostuni) bleibt er auch diskontiert vertretbar (12–13 J.). Dies ist bewusst nur eine Sensitivität — die Diskontrate ist eine Annahme, kein garantierter Ertrag.</p></div>
+</section>
+
+<!-- ============ 8. RECOMMENDATION ============ -->
+<section id="recommendation">
+<h2>8 · Empfehlung &amp; Exit-Strategie</h2>
+<table>
+<thead><tr><th>Profil</th><th>Empfehlung</th><th>Begründung</th></tr></thead>
+<tbody>
+<tr><td>Schnellster Cashflow-Payback</td><td><strong>Albufeira</strong></td><td>9,7 % Netto-Rendite → Payback Jahr 10, klar an der Spitze</td></tr>
+<tr><td>Kapital-effizient (max. Rendite/€)</td><td><strong>Ostuni</strong></td><td>8,8 % auf nur 217k Einsatz, Payback Jahr 11</td></tr>
+<tr><td>Geringstes Kapital (&lt; 180k)</td><td><strong>Rethymno</strong></td><td>Nur 174k Initial, Payback Jahr 13 — Wasserkrise beachten</td></tr>
+<tr><td>Risk-Adjusted / Long-Hold</td><td><strong>Chania</strong></td><td>Payback etwas langsamer, dafür Climate-Risk 4,3 (klassenbest)</td></tr>
+<tr><td>Avoid (nur über Wertzuwachs)</td><td>Lagos, Polignano</td><td>Netto-Rendite 5,6 % / 4,5 % → 16–20 J. reiner Payback</td></tr>
+</tbody>
+</table>
+
+<div class="callout good">
+<p><strong>Klare Empfehlung</strong> (Profil: langfristig orientierter Privatinvestor mit vorhandenem Eigenkapital, Anlagehorizont 10+ Jahre):</p>
+<p><strong>Primärziel: Albufeira</strong> (250k Kauf, Areias de São João oder Old-Town-Rand) — schnellster Payback und tiefste, liquideste STR-Regulatorik der EU.</p>
+<p><strong>Backup: Ostuni</strong>, wenn weniger Kapital gebunden werden soll (fast gleiches Payback-Profil für 71k weniger), oder <strong>Chania</strong>, wenn Klima-Resilienz über 15+ Jahre wichtiger ist als der schnellste Payback.</p>
+</div>
+
+<h3>Sell-Windows</h3>
+<table>
+<thead><tr><th>Stadt</th><th>Optimales Verkaufsfenster</th><th>Begründung</th></tr></thead>
+<tbody>
+<tr><td>Albufeira</td><td>Jahr 11–14</td><td>Nach Spekulationsfrist, bevor Klima-Druck den Preis trifft</td></tr>
+<tr><td>Ostuni</td><td>Jahr 10–12</td><td>Steuerfrei + bevor Hot-Days &gt; 12 (≥ 2035)</td></tr>
+<tr><td>Chania</td><td>Jahr 11–15</td><td>Beste Klimadaten — Verkauf ohne Eile, auf Appreciation optimieren</td></tr>
+<tr><td>Rethymno</td><td>Jahr 10–12</td><td>Sobald steuerfrei — Wasserkrise könnte sich zuspitzen</td></tr>
+<tr><td>Polignano</td><td>Jahr 10–11</td><td>So früh wie möglich nach Spekulationsfrist — Climate-Risk steigt linear</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 9. ACTIONS ============ -->
+<section id="actions">
+<h2>9 · Sofort-Aktionen</h2>
+<ul class="actionlist">
+<li><strong>Diese Woche:</strong> Termin mit portugiesischem Steuerberater (Categoria-B-Optimierung).</li>
+<li><strong>Diese Woche:</strong> NIF (Número de Identificação Fiscal) beantragen — Voraussetzung für jeden weiteren Schritt.</li>
+<li><strong>Nächste 2 Wochen:</strong> 3 Besichtigungen in Albufeira (Areias SJ, Old-Town-Rand, Olhos de Água). Idealista + Tranio Filter setzen.</li>
+<li><strong>Nächste 2 Wochen:</strong> PM-Quotes von Hostmaker Algarve + GuestReady (Albufeira + Lagos).</li>
+<li><strong>Innerhalb 4 Wochen:</strong> Erste schriftliche Offerten auf 2 Properties.</li>
+<li><strong>Innerhalb 6 Wochen:</strong> Notartermin, Anzahlung, AL-Anmeldung parallel starten.</li>
+<li><strong>Innerhalb 3 Monaten:</strong> Erste Buchung live.</li>
+</ul>
+</section>
+
+<!-- ============ 10. LIMITS ============ -->
+<section id="limits">
+<h2>10 · Ehrliche Limits &amp; Quellen</h2>
+<ul>
+<li><strong>Occupancy flat angenommen</strong> — ein Klima-Schock-Jahr mit Occ -10pp würde den Payback um 2–3 Jahre verzögern.</li>
+<li><strong>Nominal-Payback ist der Default</strong> — wer Opportunitätskosten hart bewertet, nimmt die diskontierte Spalte (§7).</li>
+<li><strong>Keine Holding-Struktur-Optimierung</strong> — könnte 5–8 % Steuer sparen und den Payback verbessern (separate Anwalts-Analyse).</li>
+<li><strong>Keine Eigennutzung eingerechnet</strong> — 1–2 Wochen/Jahr Eigennutzung senkt Occ um ~3–5 % und verlängert den Payback.</li>
+<li><strong>Was mit dem Cashflow nach dem Payback passiert, ist bewusst nicht Teil dieses Reports</strong> — das war die Frage der Vorversion (ETF-Reinvest) und wurde hier gezielt herausgenommen.</li>
+</ul>
+<p><strong>Quellen:</strong> AirROI MCP (TTM Apr 2025–Apr 2026), DataForSEO (Q1 2026), Open-Meteo (ERA5 + CMIP6), Tranio / Idealista / Immobiliare.it (Asking-Prices Q1 2026), Autoridade Tributária PT, Agenzia Entrate IT, AADE Greece (Law 5170/2025), § 23 EStG, EU-VO 2024/1028, NOAA Coastal Erosion Reports.</p>
+
+<div class="disclaimer">
+<strong>Disclaimer.</strong> Dieser Report ist eine private Investment-Recherche zu Informationszwecken und stellt <em>keine</em> Anlage-, Steuer- oder Rechtsberatung dar. Alle Cashflow-, Payback- und Klimazahlen beruhen auf Modellannahmen und historischen Daten (Stand Mai–Juli 2026); künftige Erträge, Belegungsquoten, Steuern und Immobilienpreise können erheblich abweichen. Vor einer Investition sind lokale Steuerberater und Anwälte hinzuzuziehen. &nbsp;·&nbsp; Erstellt 2026 von Maya · Version v3.1 — reine Cashflow-Payback-Analyse, abgeleitet aus v3 durch Entfernung des ETF-Reinvest-Konzepts.
+</div>
+</section>
+</main>
+</div>
+
+<script>
+const FONT = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const tick = isDark ? '#aab4c2' : '#52606d';
+const grid = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)';
+Chart.defaults.font.family = FONT;
+Chart.defaults.color = tick;
+
+const cities = ['Albufeira','Ostuni','Rethymno','Chania','Lagos','Polignano'];
+const colors = ['#d4a017','#5cb85c','#0d5eaf','#486581','#d9534f','#8e5aa8'];
+const initial = {Albufeira:288750,Ostuni:217400,Rethymno:174000,Chania:206400,Lagos:266900,Polignano:240000};
+const cf1 = {Albufeira:28131,Ostuni:19174,Rethymno:12784,Chania:14569,Lagos:14931,Polignano:10746};
+const paybackYr = {Albufeira:10,Ostuni:11,Rethymno:13,Chania:14,Lagos:17,Polignano:20};
+const yieldPct = {Albufeira:9.7,Ostuni:8.8,Rethymno:7.3,Chania:7.1,Lagos:5.6,Polignano:4.5};
+const growth = 1.014;
+
+// build 20-year cumulative series
+function cumSeries(city){
+  const out=[]; let cum=0, cf=cf1[city];
+  for(let y=1;y<=20;y++){ cum+=cf; out.push(Math.round(cum)); cf*=growth; }
+  return out;
+}
+const years = Array.from({length:20},(_,i)=>i+1);
+
+// ---- Chart 1: payback bars ----
+new Chart(document.getElementById('chartPayback'),{
+  type:'bar',
+  data:{ labels:cities.map(c=>c+'  ('+yieldPct[c]+'%)'),
+    datasets:[{ label:'Cashflow-Payback (Jahre)', data:cities.map(c=>paybackYr[c]),
+      backgroundColor:cities.map((c,i)=>colors[i]), borderRadius:5 }] },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>'Payback: Jahr '+ctx.parsed.x}} },
+    scales:{ x:{ beginAtZero:true, title:{display:true,text:'Jahre bis Payback'}, grid:{color:grid}, ticks:{color:tick} },
+      y:{ grid:{display:false}, ticks:{color:tick} } } }
+});
+
+// ---- Chart 2: climate risk bars ----
+const climate = {Chania:4.3,Albufeira:4.7,Lagos:4.9,Ostuni:5.6,Polignano:6.0,Rethymno:6.1};
+const clCities = Object.keys(climate);
+new Chart(document.getElementById('chartClimate'),{
+  type:'bar',
+  data:{ labels:clCities, datasets:[{ label:'Climate-Risk (1=best)', data:clCities.map(c=>climate[c]),
+    backgroundColor:clCities.map(c=>climate[c]<5?'#5cb85c':(climate[c]<6?'#f0ad4e':'#d9534f')), borderRadius:5 }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ beginAtZero:true, max:10, grid:{color:grid}, ticks:{color:tick} }, x:{ grid:{display:false}, ticks:{color:tick} } } }
+});
+
+// ---- Chart 3: cumulative cashflow curves + initial-investment threshold lines ----
+const annos = {};
+cities.forEach((c,i)=>{
+  annos['line'+i] = { type:'line', yMin:initial[c], yMax:initial[c],
+    borderColor:colors[i], borderWidth:1, borderDash:[5,4],
+    label:{ display:false } };
+});
+new Chart(document.getElementById('chartCumCF'),{
+  type:'line',
+  data:{ labels:years,
+    datasets:cities.map((c,i)=>({ label:c, data:cumSeries(c), borderColor:colors[i],
+      backgroundColor:colors[i], tension:.25, pointRadius:0, borderWidth:2.4 })) },
+  options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+    plugins:{ legend:{position:'bottom',labels:{color:tick,boxWidth:14}},
+      annotation:{ annotations:annos },
+      tooltip:{ callbacks:{ title:items=>'Jahr '+items[0].label,
+        label:ctx=>ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('de-DE')+' € (Ziel '+initial[ctx.dataset.label].toLocaleString('de-DE')+' €)' } } },
+    scales:{ x:{ title:{display:true,text:'Jahr'}, grid:{color:grid}, ticks:{color:tick} },
+      y:{ title:{display:true,text:'Kumulierter Netto-Cashflow (€)'}, grid:{color:grid},
+        ticks:{color:tick, callback:v=>(v/1000)+'k'} } } }
+});
+</script>
+</body>
+</html>
