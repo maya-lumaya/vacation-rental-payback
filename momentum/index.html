@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferienimmobilien – Momentum-Arbitrage-Scan (2026)</title>
+<meta name="description" content="Wo steigt die touristische Nachfrage JETZT, aber die Immobilienpreise sind noch nicht nachgezogen? 26 Märkte mit AirROI + Google Trends live validiert. Kernbefund: der Markt ist effizient.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<style>
+:root{
+  --primary:#334e68; --primary-dark:#243b53; --primary-light:#486581;
+  --accent:#d4a017; --accent-light:#f6d76b;
+  --rag-red:#d9534f; --rag-amber:#f0ad4e; --rag-green:#5cb85c;
+  --rag-red-soft:#fde2e0; --rag-amber-soft:#fdf1d8; --rag-green-soft:#dff0d8;
+  --bg:#ffffff; --bg-soft:#f7f8fa; --bg-card:#ffffff;
+  --border:#e2e6ea; --text:#1f2933; --text-soft:#52606d; --code-bg:#f0f2f5;
+  --hl:#fff8e1;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1a202c; --bg-soft:#222b3a; --bg-card:#222b3a;
+    --border:#3a4556; --text:#e6ebf2; --text-soft:#aab4c2;
+    --code-bg:#2c3444; --primary:#7fa1c8; --primary-dark:#9db8d6;
+    --primary-light:#a8c2dd; --hl:#3a3520;
+    --rag-red-soft:#4a2a28; --rag-amber-soft:#4a3a20; --rag-green-soft:#2c4030;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;font-size:15px}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:var(--bg-soft);border-right:1px solid var(--border);padding:1.2rem 1rem;font-size:13.5px}
+nav.toc .brand{font-family:Georgia,serif;font-size:1.05rem;color:var(--primary-dark);font-weight:700;margin-bottom:.2rem}
+nav.toc .ver{display:inline-block;background:var(--accent);color:#3a2c00;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;margin-bottom:.9rem}
+nav.toc h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 .6rem;color:var(--text-soft)}
+nav.toc ol{list-style:none;padding:0;margin:0;counter-reset:toc}
+nav.toc ol li{counter-increment:toc;margin:.25rem 0}
+nav.toc ol li::before{content:counter(toc) ".";color:var(--text-soft);margin-right:.45rem;font-variant-numeric:tabular-nums}
+nav.toc a{color:var(--text);text-decoration:none;border-bottom:1px dotted transparent}
+nav.toc a:hover{color:var(--primary-dark);border-bottom-color:var(--primary-light)}
+main{max-width:1160px;margin:0 auto;padding:2rem 2.4rem 5rem;width:100%}
+section{margin:0 0 3.2rem;scroll-margin-top:.5rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.3rem;line-height:1.15;margin:.4rem 0 .5rem;color:var(--primary-dark)}
+.sub{font-size:1.05rem;color:var(--text-soft);margin:0 0 1.2rem}
+h2{font-size:1.6rem;margin:2.2rem 0 .8rem;border-bottom:2px solid var(--primary);padding-bottom:.3rem;color:var(--primary-dark)}
+h3{font-size:1.2rem;margin:1.6rem 0 .5rem;color:var(--primary-dark)}
+h4{font-size:1.02rem;margin:1.2rem 0 .4rem;color:var(--primary-dark)}
+p{margin:.55rem 0}
+ul,ol{padding-left:1.4rem}
+li{margin:.18rem 0}
+a{color:var(--primary-dark)}
+table{width:100%;border-collapse:collapse;margin:.6rem 0 1.2rem;font-size:13.6px}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--bg-soft);font-weight:600;color:var(--primary-dark)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.c,th.c{text-align:center}
+tr:nth-child(even) td{background:var(--bg-soft)}
+tr.hlrow td{background:var(--hl)!important;font-weight:600}
+.kbd,code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:3px;font-size:13px}
+.callout{border-left:4px solid var(--accent);background:var(--hl);padding:.85rem 1rem;margin:.9rem 0;border-radius:4px}
+.callout.crit{border-left-color:var(--rag-red);background:var(--rag-red-soft)}
+.callout.warn{border-left-color:var(--rag-amber);background:var(--rag-amber-soft)}
+.callout.good{border-left-color:var(--rag-green);background:var(--rag-green-soft)}
+.callout p{margin:.25rem 0}
+.callout strong{color:var(--primary-dark)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:.7rem;margin:1rem 0}
+.kpi .k{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.75rem .85rem}
+.kpi .k .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
+.kpi .k .val{font-size:1.5rem;font-weight:700;color:var(--primary-dark);font-variant-numeric:tabular-nums;margin-top:.1rem}
+.kpi .k .sub{font-size:12px;color:var(--text-soft)}
+.chip{display:inline-block;padding:1px 8px;border-radius:11px;font-size:11.5px;font-weight:600;color:#fff;white-space:nowrap}
+.chip.red{background:var(--rag-red)}
+.chip.amber{background:var(--rag-amber);color:#5a3d00}
+.chip.green{background:var(--rag-green)}
+.chip.gray{background:#6c7785}
+.chip.blue{background:#0d5eaf}
+.chip.eu{background:#0d5eaf}
+.chip.frontier{background:#8e5aa8}
+.chartbox{margin:.8rem 0 1.4rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem}
+.chartbox h4{margin-top:.2rem}
+.chartbox .cap{font-size:12.5px;color:var(--text-soft);margin:.2rem 0 .6rem}
+.chartbox canvas{display:block;width:100%!important;max-height:420px}
+.formula{background:var(--code-bg);padding:.7rem .9rem;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap;margin:.5rem 0;overflow-x:auto}
+details.glossary{background:var(--bg-soft);border:1px solid var(--border);border-radius:6px;padding:.6rem .85rem;margin:.4rem 0}
+details.glossary summary{cursor:pointer;font-weight:600;color:var(--primary-dark)}
+details.glossary[open] summary{margin-bottom:.4rem}
+.actionlist{list-style:none;padding-left:0}
+.actionlist li{margin:.4rem 0;padding-left:1.7rem;position:relative}
+.actionlist li::before{content:"\2610";position:absolute;left:0;color:var(--primary);font-size:1.1rem;top:-2px}
+.disclaimer{background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;font-size:12.5px;color:var(--text-soft);margin-top:2rem}
+/* funnel */
+.funnel{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch;margin:1rem 0}
+.funnel .step{flex:1;min-width:130px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.7rem .8rem;text-align:center}
+.funnel .step .n{font-size:1.7rem;font-weight:700;color:var(--primary-dark);font-variant-numeric:tabular-nums}
+.funnel .step .t{font-size:11.5px;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em}
+.funnel .arw{display:flex;align-items:center;color:var(--text-soft);font-size:1.3rem}
+/* deep-dive market card */
+.mkt{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;margin:1.3rem 0;border-top:6px solid var(--accent)}
+.mkt.pursue{border-top-color:var(--rag-green)}
+.mkt.watch{border-top-color:var(--rag-amber)}
+.mkt.pass{border-top-color:var(--rag-red)}
+.mkt .mhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;justify-content:space-between}
+.mkt .mhead h3{margin:.1rem 0}
+.mkt .badges{display:flex;gap:.35rem;flex-wrap:wrap}
+.mkt dl{display:grid;grid-template-columns:130px 1fr;gap:.2rem .8rem;margin:.7rem 0 0;font-size:13.8px}
+.mkt dt{font-weight:600;color:var(--primary-dark)}
+.mkt dd{margin:0}
+.mkt .haken{background:var(--rag-red-soft);border-left:3px solid var(--rag-red);padding:.5rem .7rem;border-radius:4px;margin:.6rem 0 0;font-size:13.6px}
+.mkt .buybox{background:var(--rag-green-soft);border-left:3px solid var(--rag-green);padding:.5rem .7rem;border-radius:4px;margin:.5rem 0 0;font-size:13.6px}
+.mkt .vdict{background:var(--hl);border-left:3px solid var(--accent);padding:.5rem .7rem;border-radius:4px;margin:.5rem 0 0;font-size:13.8px;font-weight:600}
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  nav.toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  main{padding:1.2rem 1.1rem 4rem}
+  h1{font-size:1.8rem}
+  table{font-size:12.3px}
+  .mkt dl{grid-template-columns:1fr}
+  .mkt dt{margin-top:.4rem}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc">
+  <div class="brand">Vacation Rentals</div>
+  <span class="ver">v5 · Momentum-Arbitrage-Scan</span>
+  <h2>Inhalt</h2>
+  <ol>
+    <li><a href="#summary">Executive Summary</a></li>
+    <li><a href="#glossar">Glossar</a></li>
+    <li><a href="#methodik">Methodik</a></li>
+    <li><a href="#reframe">Der Reframe</a></li>
+    <li><a href="#trichter">Screening-Trichter</a></li>
+    <li><a href="#katalysatoren">Katalysator-Framework</a></li>
+    <li><a href="#deepdives">Deep-Dives der Überlebenden</a></li>
+    <li><a href="#watchlist">Watchlist &amp; Kauf-Signale</a></li>
+    <li><a href="#drops">Was durchfiel</a></li>
+    <li><a href="#empfehlung">Empfehlung für Florian</a></li>
+    <li><a href="#limits">Limits</a></li>
+    <li><a href="#quellen">Quellen</a></li>
+  </ol>
+</nav>
+
+<main>
+<header>
+  <h1>Ferienimmobilien&nbsp;– Momentum-Arbitrage-Scan</h1>
+  <p class="sub">Wo steigt die touristische Nachfrage JETZT, aber die Preise sind noch nicht nachgezogen? &nbsp;·&nbsp; 26 Märkte live validiert (AirROI + Google Trends) · 2-Runden Multi-Agent-Workflow · Stand Juli&nbsp;2026 · v5</p>
+  <div class="callout">
+    <p><strong>Die Frage dieses Reports:</strong> Der v3.1-Report fragte, <em>wann sich das Geld zurückspielt</em> (reife, sichere Märkte). Dieser Report stellt die <em>entgegengesetzte</em> Frage: Gibt es Orte, wo Flughäfen, Overtourism-Verdrängung oder das Klima die Nachfrage nach oben treiben — der Quadratmeterpreis das aber noch nicht eingepreist hat? Kauft man <em>vor der Masse?</em></p>
+  </div>
+</header>
+
+<!-- ============ 1. SUMMARY ============ -->
+<section id="summary">
+<h2>1 · Executive Summary</h2>
+
+<div class="callout crit">
+  <p><strong>Die zentrale Erkenntnis — und der eigentliche Wert dieses Reports:</strong> Über <strong>26 hart-validierte Märkte</strong> (aus 69 Kandidaten in 30+ Ländern) liefert <strong>kein einziger</strong> die „billig-für-die-Einnahmen"-Tiefarbitrage (12–20&nbsp;% Brutto), die die naive These verspricht. <strong>Jeder</strong> günstige €/m² entpuppte sich als <em>faire Kompensation</em> — für kürzere Saison, weiche Währung, dünne Liquidität oder eine schlechtere Steuerbasis. Der europäische STR-Markt ist effizienter, als man hofft.</p>
+</div>
+
+<div class="kpi">
+  <div class="k"><div class="lbl">Validierte Märkte</div><div class="val">26</div><div class="sub">aus 69 Kandidaten, 30+ Länder</div></div>
+  <div class="k"><div class="lbl">Echte Tiefarbitrage gefunden</div><div class="val">0</div><div class="sub">von 26 — Markt ist effizient</div></div>
+  <div class="k"><div class="lbl">„Überlebende"</div><div class="val">7</div><div class="sub">alle nur Appreciation-Wetten</div></div>
+  <div class="k"><div class="lbl">Reife Anker (v3.1)</div><div class="val">7–10 %</div><div class="sub">netto — schwer zu schlagen</div></div>
+</div>
+
+<h3>Die vier Fallen, die „billig + steigend" zur Illusion machen</h3>
+<table>
+<thead><tr><th>Falle</th><th>Wo</th><th>Mechanismus</th></tr></thead>
+<tbody>
+<tr><td><strong>Währungs-Illusion</strong></td><td>Türkei, Georgien</td><td>Weiche Lira/Lari verbilligt den <em>Einstieg</em> — aber auch das <em>Einkommen</em> im gleichen Maße. Hartwährungs-Rendite bleibt auf EU-Niveau, Risiko explodiert.</td></tr>
+<tr><td><strong>Brutto-Steuer-Falle</strong></td><td>Griechenland</td><td>STR-Einkommen wird auf <em>Brutto</em> besteuert (Management/Nebenkosten nicht absetzbar) → aus ~11 % Brutto werden 3–5 % netto (Milos).</td></tr>
+<tr><td><strong>Saison-Falle</strong></td><td>fast alle</td><td>Occupancy 33–44 %, echte Saison ~6–10 Wochen. Hoher Peak-ADR täuscht über dünne Jahres-Rendite.</td></tr>
+<tr><td><strong>Liquiditäts-/Risiko-Kompensation</strong></td><td>Süd-Kalabrien, Albanien</td><td>Der niedrige €/m² <em>ist</em> der Preis für schlechten Wiederverkauf, Erdbebenzone, Titel-Risiko oder strukturellen Niedergang.</td></tr>
+</tbody>
+</table>
+
+<h3>Die „Überlebenden" — beste Momentum-Arbitrage-Fälle (keiner ein klarer BUY)</h3>
+<p>Sortiert nach Stärke des Arbitrage-Arguments. <strong>Netto-Rendite ist die ehrliche Entscheidungskennzahl</strong> (nach lokaler Steuer + Property-Management + Saison).</p>
+<table>
+<thead><tr><th>#</th><th>Markt</th><th class="c">Tier</th><th>Katalysator</th><th class="num">Brutto</th><th class="num">NETTO</th><th>Preis-Lag real?</th><th>Verdikt</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td>1</td><td><strong>Scilla</strong> (Kalabrien)</td><td class="c"><span class="chip eu">EU</span></td><td>Ryanair-Base Reggio + Messina-Brücke</td><td class="num">~8 %</td><td class="num">~4,5–5,5 %</td><td>Ja, aber moderat (~59 % v. Tropea)</td><td><span class="chip amber">SPEKULATIV</span> nur Trophy-Unit</td></tr>
+<tr><td>2</td><td><strong>Milos</strong> (Kykladen)</td><td class="c"><span class="chip eu">EU</span></td><td>Santorini-Freeze-Spillover (temporär)</td><td class="num">~11 %</td><td class="num">~3–5 %</td><td>Nein (fair vs. Paros/Naxos)</td><td><span class="chip amber">SPEKULATIV</span> lean PASS</td></tr>
+<tr><td>3</td><td><strong>Trapani</strong> (Sizilien)</td><td class="c"><span class="chip eu">EU</span></td><td>Ryanair-Base +35 % + Nolan „Odyssey" 07/26</td><td class="num">~8–11 %</td><td class="num">~3–5 %</td><td>Dünn (~1,2× Vorteil)</td><td><span class="chip amber">WATCH</span> Signal H2-2026</td></tr>
+<tr><td>4</td><td><strong>Ponta Delgada</strong> (Azoren)</td><td class="c"><span class="chip eu">EU</span></td><td>Coolcation + Luftanbindung (fragil)</td><td class="num">~10–11 %</td><td class="num">~4,5–5,5 %</td><td>Nein (≈ Funchal-Parität)</td><td><span class="chip red">PASS</span> / spekulativ</td></tr>
+<tr><td>5</td><td><strong>Viana do Castelo</strong> (Minho)</td><td class="c"><span class="chip eu">EU</span></td><td>Coolcation + Porto-Spillover</td><td class="num">~9 %</td><td class="num">~5,5–6,5 %</td><td>Ja, schließt sich aber nicht</td><td><span class="chip amber">SPEKULATIV</span> Lizenz-Freeze!</td></tr>
+<tr><td>6</td><td><strong>Saranda</strong> (Albanien)</td><td class="c"><span class="chip frontier">Frontier</span></td><td>Vlora-Flughafen (verschoben!)</td><td class="num">~5–9 %</td><td class="num">~4–5 %</td><td>€/m² ja, Rendite nein</td><td><span class="chip red">WATCH/PASS</span></td></tr>
+<tr><td>7</td><td><strong>Kaş/Kalkan</strong> (Türkei)</td><td class="c"><span class="chip frontier">Frontier</span></td><td>Dalaman-Anbindung + Lira-FX</td><td class="num">~6–9 %</td><td class="num">~3–5 % (TRY)</td><td>Währungs-Illusion</td><td><span class="chip red">PASS</span> / FX-Wette</td></tr>
+</tbody>
+</table>
+
+<div class="chartbox">
+  <h4>Netto-Rendite der Überlebenden vs. das reife-Anker-Band (7–10 %)</h4>
+  <p class="cap">Netto nach lokaler Steuer + PM + Saison (Mittelwert der Spanne). Das goldene Band markiert Florians bestehende v3.1-Anker (Albufeira/Ostuni/Chania). Kein Emerging-Markt reicht heran.</p>
+  <canvas id="chartYield" height="230"></canvas>
+</div>
+
+<h3>Schlüssel-Erkenntnisse</h3>
+<div class="callout"><p><strong>1 · Momentum-Arbitrage ist als <em>Framework</em> real, als <em>sofortiger Deal</em> 2026 kaum.</strong> Die Katalysatoren sind echt und datierbar — aber der Markt preist sie inzwischen schnell ein. Das Fenster zwischen Ankündigung und Preis-Reaktion ist im EU-Raum meist schon &lt;12–24 Monate.</p></div>
+<div class="callout good"><p><strong>2 · Der wertvollste Output ist das Katalysator-Framework (§6) als <em>Monitoring-System</em>, nicht eine Kaufliste.</strong> Statt heute einen mittelmäßigen Deal zu kaufen: die 22 Katalysatoren als Radar nutzen und zuschlagen, wenn ein <em>konkretes</em> Signal feuert.</p></div>
+<div class="callout"><p><strong>3 · Der einzige „billige Call-Option"-Play ist Trapani</strong> (~90–130k € all-in): zwei große, datierte Vorwärts-Katalysatoren (Ryanair-Base +35 % + Nolans „The Odyssey", Kinostart 17.07.2026) — aber steigende Nachfrage in den Zahlen noch <em>nicht</em> bestätigt.</p></div>
+<div class="callout"><p><strong>4 · Der sauberste „Momentum + Lag"-Fall ist Scilla:</strong> +43 % RevPAR in 3 Jahren bei flachem Angebot, echter Preis-Lag vs. Tropea, Doppel-Katalysator. Aber ~5 % netto, ~6-Wochen-Saison, Erdbebenzone 1 — eine Appreciation-Wette, kein Cashflow-Play.</p></div>
+<div class="callout warn"><p><strong>5 · Frontier (Batumi, Saranda, Kaş, Ulcinj) = Kapital-Appreciation in Risiko-Verpackung, keine Rendite-Arbitrage.</strong> Die beworbenen „15–25 % Brutto" (Batumi) sind Entwickler-Marketing; harte Daten zeigen ~8 % Brutto / 4–6 % netto bei Überangebot und weicher Währung.</p></div>
+</section>
+
+<!-- ============ 2. GLOSSAR ============ -->
+<section id="glossar">
+<h2>2 · Glossar</h2>
+<table>
+<tbody>
+<tr><td><strong>ADR</strong></td><td>Average Daily Rate – Ø Nightly Rate über belegte Nächte</td></tr>
+<tr><td><strong>Momentum-Arbitrage</strong></td><td>Kernthese: Markt mit HOHEM Nachfrage-Momentum UND HOHEM Preis-Lag, gated durch Machbarkeit</td></tr>
+<tr><td><strong>Demand-Momentum (Leg A)</strong></td><td>Steigt Popularität nachweislich? RevPAR-/Occ-/Revenue-Wachstum + Future-Pacing + Google-Trends-Slope + Ankünfte + Vorwärts-Katalysator</td></tr>
+<tr><td><strong>Preis-Lag (Leg B)</strong></td><td>Ist Preis noch nicht nachgezogen? Hohe implizite Brutto-Rendite + quantifizierter €/m²-Discount vs. reifem Vergleichsmarkt</td></tr>
+<tr><td><strong>Implizite Brutto-Rendite</strong></td><td>AirROI-Jahresrevenue ÷ Kaufpreis (gleiche Währung). Reifer Markt ~8–12 %, echter Lag-Markt 12–20 %</td></tr>
+<tr><td><strong>Netto-Rendite</strong></td><td>Brutto minus lokale STR-Steuer, Property-Management (~20–25 %), Nebenkosten, Saison-Leerstand. <strong>Die Entscheidungskennzahl.</strong></td></tr>
+<tr><td><strong>Feasibility-Gate</strong></td><td>Professionelles Property-Management + Rechts-/Eigentumssicherheit + Klima bis 2040 + Währungs-/Politik-Risiko + Wiederverkaufs-Liquidität</td></tr>
+<tr><td><strong>Future-Pacing</strong></td><td>Vorwärts-Buchungen für kommende Termine vs. Vorjahr — führender Nachfrage-Indikator (AirROI)</td></tr>
+<tr><td><strong>Coolcation</strong></td><td>Struktureller Klima-Trend: Nachfrage wandert von der überhitzten Süd-Med nach Norden/in die Höhe (Atlantik, Baltikum, Alpenseen)</td></tr>
+<tr><td><strong>Overtourism-Spillover</strong></td><td>Wenn ein Hub STR/Kreuzfahrt deckelt (Barcelona, Santorini, Venedig, Dubrovnik), fließt Nachfrage in benannte billigere Nachbarn</td></tr>
+<tr><td><strong>Set-Jetting</strong></td><td>Film-/TV-Drehort-Effekt auf Reisenachfrage (White-Lotus-Effekt)</td></tr>
+<tr><td><strong>LCC-Base</strong></td><td>Low-Cost-Carrier stationiert <em>permanent</em> Flugzeuge → gezwungen, ganzjährig Sitze zu füllen. Stärkstes Vorwärts-Signal</td></tr>
+<tr><td><strong>Cedolare Secca (IT)</strong></td><td>Italienische STR-Pauschalsteuer: 21 % (1. Objekt) / 26 % (ab 2. Objekt) auf Brutto</td></tr>
+<tr><td><strong>AL / AMA / CIN</strong></td><td>Nationale STR-Registrierungs-/Lizenznummern (Portugal / Griechenland / Italien)</td></tr>
+<tr><td><strong>Freeze / Moratorium</strong></td><td>Behördlicher Stopp neuer STR-Lizenzen in einem Hotspot (Athen-Zentrum, Palma, Barcelona, jetzt Viana do Castelo)</td></tr>
+<tr><td><strong>Value-Gap-Score</strong></td><td>0–100-Blend aus Demand-Momentum × Preis-Lag, gated durch Feasibility (agenten-vergeben, vor adversarialer Korrektur)</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 3. METHODIK ============ -->
+<section id="methodik">
+<h2>3 · Methodik</h2>
+<h3>Der 2-Runden Multi-Agent-Workflow</h3>
+<p>Diese Research wurde als deterministischer <strong>Multi-Agent-Workflow</strong> durchgeführt — als strukturierte Fan-out-/Verify-Pipeline mit adversarialer Prüfung. Gesamt: <strong>~50 Agenten, ~5,3 Mio. Tokens, ~1.000 Live-Tool-Calls.</strong></p>
+<div class="kpi">
+  <div class="k"><div class="lbl">Agenten</div><div class="val">~50</div><div class="sub">Runde 1: 38 · Runde 2: 12</div></div>
+  <div class="k"><div class="lbl">Subagent-Tokens</div><div class="val">~5,3 M</div><div class="sub">Live-Recherche</div></div>
+  <div class="k"><div class="lbl">Tool-Calls</div><div class="val">~1.000</div><div class="sub">AirROI · Trends · Web</div></div>
+  <div class="k"><div class="lbl">Longlist → validiert</div><div class="val">69 → 26</div><div class="sub">→ 7 Überlebende</div></div>
+</div>
+<p><strong>Runde 1 (38 Agenten):</strong> (1) Katalysator-Framework (4 parallele Rechercheure) → §6; (2) 6 Regional-Longlists → 69 Kandidaten; (3) 20 Daten-Validierungen → harte Scorecards; (4) 7 adversariale Prüfungen („Warum ist es billig — was ist der Haken?") + Buy-Box; (5) Completeness-Critic → identifizierte einen systematischen Blind Spot (Frontier- und Coolcation-Ecken).</p>
+<p><strong>Runde 2 (12 Agenten):</strong> Validierung genau der 6 vom Critic markierten unter-sampleten Kandidaten (Batumi, Ulcinj/Bar, Vlora/Dhërmi, Silver Coast, Rías Baixas, Bagnara/Palmi) — <strong>alle 6 fielen durch</strong> (§9).</p>
+
+<h3>Die Kern-Kennzahl</h3>
+<div class="formula">Demand-Momentum-Score (0–10)  ×  Preis-Lag-Score (0–10)   [gated: Feasibility (0–10)]
+   = Value-Gap-Score (0–100)
+
+Implizite Brutto-Rendite = AirROI-Jahresrevenue / Kaufpreis
+Netto-Rendite (Entscheidung) = Brutto − lokale STR-Steuer − PM (~22 %) − OpEx − Saison-Leerstand</div>
+<div class="callout warn"><p><strong>Wichtig:</strong> Der Value-Gap-Score wurde <em>vor</em> der adversarialen Prüfung vergeben. In fast allen Fällen korrigierte die Skeptiker-Runde die Netto-Rendite nach <em>unten</em> (Brutto-Steuer-Fallen, Villa- vs. Apartment-Verwechslung, Saison). Der Report führt beide: Screening-Score UND das ehrliche Verdikt danach.</p></div>
+
+<h3>Datenquellen</h3>
+<ul>
+<li><strong>AirROI MCP</strong> (Live, 01.07.2026) — Market Summary, RevPAR-Zeitreihen (36–48 Monate), Future-Pacing, Active Listings. Native EUR für Eurozone, USD-konvertiert (~1 €=1,08 $) für Nicht-Euro-Märkte.</li>
+<li><strong>DataForSEO / Google Trends MCP</strong> (Live) — 5-Jahres-Nachfrage-Slope pro Destination (Summer-Peak-Multiple 2021 → 2025/26).</li>
+<li><strong>WebSearch/WebFetch</strong> — Katalysatoren (datierte Flughafen-/Routen-/Visa-/Event-News), Ankunfts-Statistiken, reale €/m²-Angebotspreise, STR-Regulatorik, Property-Manager.</li>
+</ul>
+<div class="callout"><p><strong>Ehrlichkeits-Flag:</strong> AirROI deckt Frontier-Märkte lückenhaft ab (dünne oder erst 2024/25 startende Historie in Albanien/Georgien). Wo Abdeckung dünn war, haben die Agenten es explizit markiert und auf nationale Tourismus-Statistiken zurückgegriffen. Frontier-Zahlen tragen niedrigere Konfidenz.</p></div>
+</section>
+
+<!-- ============ 4. REFRAME ============ -->
+<section id="reframe">
+<h2>4 · Der Reframe: Warum „billig + steigend" meist eine Fata Morgana ist</h2>
+<p>Die naive These lautet: <em>„Finde einen Ort, wo Touristen strömen, aber Immobilien noch billig sind — kaufe, bevor die Preise nachziehen."</em> Sie scheitert fast immer, weil <strong>der niedrige Preis fast nie ein Zufall ist</strong>. Er ist die Kompensation für einen realen Nachteil:</p>
+<table>
+<thead><tr><th>Scheinbarer Deal</th><th>Realer Grund für den niedrigen Preis</th></tr></thead>
+<tbody>
+<tr><td>Batumi €1.290/m² „mit 15–25 % Rendite"</td><td>Überangebot (Listings verdoppelt auf ~6.150), RevPAR <em>fällt</em>, echte Netto ~4–6 %, weiche Lari. 15–25 % = Entwickler-Marketing.</td></tr>
+<tr><td>Kaş/Kalkan „9–12 % in der Türkei"</td><td>Villa-verzerrter Durchschnitt; ein Apartment macht ~6–9 % brutto / 3–5 % netto — in fallender Lira.</td></tr>
+<tr><td>Milos „halber Santorini-Preis"</td><td>Faire Bepreisung vs. echte Peers (Paros/Naxos); Griechenlands Brutto-Steuer frisst netto auf 3–5 %.</td></tr>
+<tr><td>Saranda „billig vs. Korfu"</td><td>Kürzere Saison, niedrigere Einnahmen, Titel-Risiko, kein institutionelles PM. €/m² niedrig = Risiko-Preis.</td></tr>
+<tr><td>Rías Baixas „boomende Ankünfte"</td><td>Trotz Rekord-Ankünften: RevPAR pro Einheit <em>flach</em>, Preis auf Med-Niveau → ~1,5 % netto.</td></tr>
+<tr><td>Silver Coast „Coolcation-Zukunft"</td><td>Ericeira +35 % <em>Aufschlag</em> zur Algarve (Lissabon-Pendler-Geld), Nachfrage flach, netto ~2,5–3,5 %.</td></tr>
+</tbody>
+</table>
+<div class="callout"><p><strong>Die Lehre:</strong> Ein echter Arbitrage-Fall braucht einen Grund, warum der Preis <em>noch nicht</em> reagiert hat, der <em>nicht</em> fundamental ist — z. B. einen gerade erst datierten Katalysator (Flughafen-Zertifizierung, Freeze-Ankündigung), den der lokale Verkäufer noch nicht eingepreist hat. Dieses Fenster ist im EU-Raum 2026 fast überall schon geschlossen; im Frontier-Raum ist es offen, aber durch Risiko „bezahlt".</p></div>
+</section>
+
+<!-- ============ 5. TRICHTER ============ -->
+<section id="trichter">
+<h2>5 · Das Screening-Trichter (69 → 26 → 7)</h2>
+<div class="funnel">
+  <div class="step"><div class="n">69</div><div class="t">Longlist<br>Mikromärkte</div></div>
+  <div class="arw">→</div>
+  <div class="step"><div class="n">20</div><div class="t">Shortlist R1<br>max 4/Land</div></div>
+  <div class="arw">+</div>
+  <div class="step"><div class="n">6</div><div class="t">Critic-Leads R2</div></div>
+  <div class="arw">→</div>
+  <div class="step"><div class="n">26</div><div class="t">Hart validiert</div></div>
+  <div class="arw">→</div>
+  <div class="step"><div class="n">7</div><div class="t">Überlebende<br>(kein BUY)</div></div>
+</div>
+<table>
+<thead><tr><th>Stufe</th><th class="num">Anzahl</th><th>Was</th></tr></thead>
+<tbody>
+<tr><td>Longlist</td><td class="num">69</td><td>Spezifische Mikromärkte über 30+ Länder (§8 Watchlist zeigt Auswahl)</td></tr>
+<tr><td>Shortlist (Runde 1)</td><td class="num">20</td><td>Diversitäts-gefiltert (max. 4/Land), an harte Daten übergeben</td></tr>
+<tr><td>+ Runde 2 (Critic-Leads)</td><td class="num">6</td><td>Batumi, Ulcinj/Bar, Vlora/Dhërmi, Silver Coast, Rías Baixas, Bagnara</td></tr>
+<tr class="hlrow"><td><strong>Hart validiert gesamt</strong></td><td class="num">26</td><td>AirROI + Trends + reale Preise + Netto-Rendite</td></tr>
+<tr><td>„Überlebende" (nicht DROP)</td><td class="num">7</td><td>§7 Deep-Dives — aber keiner ein klarer BUY</td></tr>
+<tr><td>Klar durchgefallen</td><td class="num">19</td><td>§9 zeigt die lehrreichsten</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 6. KATALYSATOREN ============ -->
+<section id="katalysatoren">
+<h2>6 · Was lässt eine Gegend steigen? — Das Katalysator-Framework</h2>
+<div class="callout good"><p><strong>Dies ist der wiederverwendbare, dauerhafte Wert dieses Reports:</strong> 22 datierte, quellenbelegte Katalysatoren in 4 Familien. Nutze sie als <em>Radar</em> — jeder ist ein öffentlich ankündbares, datierbares Vorwärts-Signal, das der Masse Wochen bis Jahre vorausläuft.</p></div>
+
+<h3>6.1 Transport-Infrastruktur (das stärkste Vorwärts-Signal)</h3>
+<div class="callout"><p>Transport-Katalysatoren sind der <strong>stärkste Prädiktor</strong> eines Nachfrage-Sprungs — 6–48 Monate <em>vor</em> der Preisreaktion angekündigt. Kauf-Fenster: die 12–24 Monate zwischen Ankündigung und Airline-Ramp.</p></div>
+<table>
+<thead><tr><th>Katalysator</th><th class="c">Stärke</th><th>Konkrete datierte Beispiele (2024–2028)</th></tr></thead>
+<tbody>
+<tr><td><strong>Neuer/verlegter FLUGHAFEN</strong></td><td class="c"><span class="chip green">5/5</span></td><td><strong>Vlora Intl</strong> (AL, 3,2km, Zert.-Flug 05/2025 — Start verschoben); <strong>Kastelli/Heraklion</strong> (Kreta, ~67 % gebaut 01/2026, Betrieb 2028); <strong>Tivat+Podgorica</strong> (MNE, 30-J.-PPP 2025, Runway 3.000m); <strong>Kalamata</strong> (Peloponnes, 40-J.-Konzession 06/2026, €75M Terminal)</td></tr>
+<tr><td><strong>Neue LCC-BASE</strong> (stationierte Flieger)</td><td class="c"><span class="chip green">5/5</span></td><td><strong>Tirana</strong>: Ryanair-Base 03/2026 (4 Flieger, 44 Routen, +50 %) UND Wizz parallel; <strong>Rabat/Marokko</strong>: Ryanairs 5. Base 04/2026; <strong>Kutaisi/Georgien</strong>: Wizz-Base (3 Flieger, 27 Routen, Berlin/München direkt)</td></tr>
+<tr><td><strong>Neue DIREKTROUTEN</strong></td><td class="c"><span class="chip green">4/5</span></td><td><strong>Kalabrien</strong>: Ryanair S26 (4 Basen, 42 Routen, +14 %); <strong>Kap Verde</strong>: easyJet 03/2025 (26 Routen)+TUI; <strong>Vlora</strong>: Chair Zürich–Vlora 06/2026 (<em>annulliert</em>); <strong>Kalamata/Preveza</strong>: Ryanair S26</td></tr>
+<tr><td><strong>Flughafen-STEUER-Abschaffung</strong> (frühestes Signal)</td><td class="c"><span class="chip green">4/5</span></td><td><strong>Abruzzen</strong> (Pescara +80 % nach Streichung); <strong>Kalabrien/Sizilien/Friaul</strong>; <strong>Albanien</strong> (Null-Luftfahrtsteuer → Ryanair+Wizz-Base-Rennen)</td></tr>
+<tr><td><strong>Hochgeschwindigkeits-/BAHN</strong></td><td class="c"><span class="chip amber">3/5</span></td><td><strong>Neapel–Bari HSR</strong> (€6 Mrd, ~2027/28, neue Irpinia-Station); <strong>Porto–Lissabon HSR</strong> (Phase 1 ~2028); Paris–Berlin direkt (seit 12/2024)</td></tr>
+<tr><td><strong>Feste VERBINDUNGEN</strong> (Brücken/Fähren)</td><td class="c"><span class="chip amber">3/5</span></td><td><strong>Pelješac-Brücke</strong> (HR, 2022); <strong>Kotor/Budva–Dubrovnik Schnellfähren</strong> (2025, kanalisiert Overflow nach MNE); <strong>Messina-Brücke</strong> (€13,5 Mrd, CIPESS 08/2025, aber Rechnungshof-Blockade 10/2025)</td></tr>
+<tr><td><strong>KREUZFAHRT-Terminals</strong> (schwach)</td><td class="c"><span class="chip red">2/5</span></td><td>Nur Awareness-Signal; STR-Übernacht-Effekt gering (Tagesgäste). Ziel: Overflow-Städte, nicht die Kreuzfahrt-Stadt.</td></tr>
+</tbody>
+</table>
+
+<h3>6.2 Politik / Regulatorik / Overtourism-Spillover (am besten prognostizierbar)</h3>
+<div class="callout"><p>Die <strong>prognostizierbarste</strong> Familie — läuft auf veröffentlichten Daten, Urteilen und Beitritts-Kalendern. Höchste Konviktion: <strong>Overtourism-Verdrängung</strong> — wenn ein gesättigter Hub deckelt, fließt die Nachfrage zum benannten billigeren Nachbarn.</p></div>
+<table>
+<thead><tr><th>Katalysator</th><th class="c">Stärke</th><th>Konkrete Beispiele</th></tr></thead>
+<tbody>
+<tr><td><strong>Overtourism-Kappung → Spillover</strong></td><td class="c"><span class="chip green">5/5</span></td><td><strong>Santorini</strong> (8.000/Tag Cap 25/26, −18 % Schiffe) → <strong>Naxos/Paros/Milos</strong>: „Piräus→Naxos" +10 % YoY; AirROI: Naxos-Revenue (€13.951) &gt; reifes Korfu (€12.436) bei billigerem €/m². <strong>Dubrovnik</strong> (2 Schiffe/Tag) → <strong>Šibenik/Zadar</strong>. <strong>Venedig</strong> (Zugangsgebühr) → Festland Mestre (Übernachtung dort <em>befreit</em>)</td></tr>
+<tr><td><strong>STR-Lizenz-BAN/Freeze</strong> → Nachbarorte</td><td class="c"><span class="chip green">5/5</span></td><td><strong>Barcelona</strong> (alle ~10.000 Lizenzen bis 11/2028 weg, Verfassungsgericht 03/2025) → Costa Brava; <strong>Athen-Zentrum</strong> (Freeze seit 01/2025, Ausweitung 09/2025); <strong>Palma</strong> (alle neuen ab 02/2026 weg); <strong>Amsterdam</strong> (30→15 Nächte 04/2026) → Haarlem/Zaandam</td></tr>
+<tr><td><strong>STR-LIBERALISIERUNG</strong></td><td class="c"><span class="chip amber">3/5</span></td><td><strong>Portugal</strong> DL 76/2024 (11/2024): AL permanent + übertragbar außerhalb Lissabon/Porto → öffnet Silberküste/Alentejo. <strong>EU-VO 2024/1028</strong> (ab 20.05.2026): drängt Grau-Angebot raus</td></tr>
+<tr><td><strong>Digital-Nomad-Visa</strong></td><td class="c"><span class="chip amber">3/5</span></td><td>Italien (04/2024), Spanien (Beckham 15 %), Griechenland (−50 % Steuer), Albanien (~817 €/Mon.) → füllt Nebensaison</td></tr>
+<tr><td><strong>Golden-Visa-Abschaffung/Tiering</strong></td><td class="c"><span class="chip amber">3/5</span></td><td>Spanien abgeschafft 04/2025; <strong>Griechenland getiert</strong>: €800k in Hotspots, aber €400k anderswo → lenkt Käufer in billigere Sekundärregionen</td></tr>
+<tr><td><strong>EU-Beitritt / Euro-Konvergenz</strong></td><td class="c"><span class="chip green">4/5</span></td><td><strong>Bulgarien</strong> (Euro 01.01.2026 → Burgas +26 %, Varna +14 %; Neubau ~€1.650/m² vs. Costa Blanca €3.800); <strong>Kroatien</strong> (Template 2023 → +10–13 %/J.); <strong>Montenegro</strong> (Beitritt-Ziel 2028, nutzt bereits Euro)</td></tr>
+</tbody>
+</table>
+
+<h3>6.3 Kultur / Event / Klima-Verschiebung</h3>
+<div class="callout"><p>Bewegt Nachfrage durch <strong>Narrativ und Klima</strong>. Regel: nie die „Hero"-Location (Taormina, Cortina, Santorini sind schon teuer) — der billigere <em>Nachbar</em>ort mit gleichem Strand/Flughafen/Klima.</p></div>
+<table>
+<thead><tr><th>Katalysator</th><th class="c">Stärke</th><th>Konkrete Beispiele</th></tr></thead>
+<tbody>
+<tr><td><strong>Set-Jetting</strong> (Film/TV)</td><td class="c"><span class="chip green">4/5</span></td><td><strong>White Lotus S2</strong> → Noto (€1.760/m²)/Ortigia (€1.050)/Cefalù; <strong>„The Odyssey"</strong> (Nolan, Dreh Favignana 2025, <strong>Kinostart 17.07.2026</strong>) → Festland-Trapani (€920/m²); White Lotus S4 (Dreh 2026 Côte d'Azur) → Var/Provence</td></tr>
+<tr><td><strong>Mega-Events</strong></td><td class="c"><span class="chip green">4/5</span></td><td><strong>Milano-Cortina 2026</strong> (Cortina €12–13k/m², aber Auronzo di Cadore €1.861 = −86 %, gleicher Halo); <strong>FIFA WM 2030</strong> Marokko (Frontier); <strong>Ryder Cup 2031</strong> Costa Brava/Girona</td></tr>
+<tr><td><strong>European Capital of Culture</strong></td><td class="c"><span class="chip amber">3/5</span></td><td><strong>Évora</strong> (PT, 2027, UNESCO, €1.590/m² — EU-safe, datiert); <strong>Liepāja</strong> (LV, 2027, + Coolcation); Nova Gorica/Gorizia (2025 live)</td></tr>
+<tr><td><strong>Coolcation</strong> (Klima-Migration)</td><td class="c"><span class="chip green">5/5</span></td><td>ETC: ~28 % suchen aktiv kühlere Ziele, +300 % „coolcation"-Suchen. Green Spain (Galicien/Asturien), Nord-Portugal, Baltikum (Polen +19 %, Litauen +21 %), Alpenseen (Iseo/Orta). <em>Aber:</em> harte Daten zeigen oft flache RevPAR + Preis-Aufschlag (s. §9) — Coolcation ist ein Klima-<em>Hedge</em>, nicht automatisch Rendite</td></tr>
+<tr><td><strong>Saison-Verlängerung</strong></td><td class="c"><span class="chip green">4/5</span></td><td>Sep–Okt übertrifft inzwischen Mai–Juni; „Oktober ist keine Nebensaison mehr". Hebt <em>Jahres</em>-RevPAR sekundärer Med-Märkte mit mildem Winter + Nicht-Strand-Draw</td></tr>
+</tbody>
+</table>
+
+<h3>6.4 Struktur / Ökonomie (erklärt die <em>Dauer</em> der Lücke)</h3>
+<table>
+<thead><tr><th>Katalysator</th><th class="c">Stärke</th><th>Konkrete Beispiele</th></tr></thead>
+<tbody>
+<tr><td><strong>Weiche Währung / Niedrigkosten-Küsten</strong></td><td class="c"><span class="chip green">4/5</span></td><td>Türkei (Lira −17–21 % → FX-„Rabatt", aber Einkommen ebenso weich); <strong>Batumi</strong> ($700–1.200/m²); Kap Verde (Escudo an € gepeggt); Saranda (€1.600–1.800/m²). <em>Der FX-Rabatt verbilligt Einstieg UND Einkommen — Frontier-Tier</em></td></tr>
+<tr><td><strong>„The next X"-Narrativ</strong></td><td class="c"><span class="chip amber">3/5</span></td><td>Kalabrien („next Puglia"); Alentejo/Comporta (€4.066/m², „next Algarve"); Saranda („next Croatia/Montenegro"). Sobald Konsens → Aufholung schnell (oft Überschießen)</td></tr>
+<tr><td><strong>Airline-Sitzkapazität</strong> (harter Frühindikator)</td><td class="c"><span class="chip green">5/5</span></td><td>Ryanair+Wizz+Jet2 +13 Mio. Sitze für S26 im Med; Wizz +50,7 % Spanien, +41,6 % Griechenland; Tirana &gt;10 Mio. Pax (+55 % YoY)</td></tr>
+<tr><td><strong>Früher Auslands-Käufer-Zufluss</strong></td><td class="c"><span class="chip green">4/5</span></td><td>Fenster wenn Ausländer-Anteil von ~10 % → 40 % <em>steigt</em>, aber noch nicht dominant. Puglia (~70 % DE, Ende der Kurve); Kreta #1 Überseenachfrage; Montenegro FDI +14 % H1-2025</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 7. DEEP-DIVES ============ -->
+<section id="deepdives">
+<h2>7 · Deep-Dives der „Überlebenden"</h2>
+<p>Keiner ist ein klarer BUY. Reihenfolge nach Stärke des Momentum-Arbitrage-Arguments (nach adversarialer Korrektur).</p>
+
+<div class="chartbox">
+  <h4>Demand-Momentum: August-RevPAR-Wachstum über 3 Jahre</h4>
+  <p class="cap">Der Kern-Nachweis „steigende Nachfrage". Trapani ist der Ausreißer (flach — daher WATCH, nicht PURSUE): dort ist die Nachfrage nur eine <em>Vorwärts</em>-Katalysator-Wette, noch nicht in den Zahlen.</p>
+  <canvas id="chartMomentum" height="220"></canvas>
+</div>
+
+<h3>Tier 1 — EU-safe Appreciation-/Katalysator-Plays</h3>
+
+<div class="mkt watch">
+  <div class="mhead"><h3>7.1 · Scilla (Costa Viola, Kalabrien)</h3>
+    <div class="badges"><span class="chip eu">EU-safe</span><span class="chip amber">SPEKULATIV</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Der sauberste Momentum + Lag-Fall im Feld.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~5 %</div><div class="sub">nach PM+Steuer+Saison</div></div>
+    <div class="k"><div class="lbl">Brutto</div><div class="val">~8 %</div><div class="sub">Markt-Ø / Top-Q ~8–9 %</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">38 %</div><div class="sub">~4-Monats-Saison</div></div>
+    <div class="k"><div class="lbl">RevPAR-Trend</div><div class="val">+43 %</div><div class="sub">Aug, 3 Jahre</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR €62,2 TTM; Aug-RevPAR +43 % in 3 Jahren (88 → 125,6), Sept +67 %; Revenue €10.184/Listing; Listings ~85–113 <strong>flach-bis-fallend</strong> → Gewinne werden nicht weg-konkurriert. Trends zu klein/verrauscht (selbst ein „early"-Signal).</dd>
+    <dt>Katalysator</dt><dd><strong>Doppelt:</strong> (1) Ryanair-Base Reggio (25 Min., €400M-Plan, +14 % Pax, Kommunalsteuer gestrichen) — live Sommer 2026. (2) Straße-von-Messina-Brücke (€13,5 Mrd, CIPESS 08/2025) — <strong>aber Rechnungshof-Blockade 10/2025</strong>; nicht als sicher unterschreiben.</dd>
+    <dt>Preis-Lag</dt><dd>~€1.713–1.900/m² (flach); vs. <strong>Tropea €3.081/m²</strong> → Scilla ~59 % des Preises bei ~86 % der RevPAR. Echter, aber moderater Lag.</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Süd-Kalabrien ist Italiens billigste Region aus <em>strukturellem</em> Grund (Abwanderung, illiquider Wiederverkauf). Der Cashflow ist bankbar; der <em>Exit</em> ist das Problem — ~100-Listing-Mikromarkt, flache Preise, langsamer Verkauf.</div>
+  <div class="buybox"><strong>Buy-Box:</strong> Chianalea-Wasserfront (~35 Listings, Instagram-Draw) oder oberes Marina Grande mit Meerblick — <strong>nur bei ≤€1.900/m²</strong>. Ziel ~€115–140k (~€145–180k all-in). 2BR Meerblick, erdbebensicher. PM dünn (regionale Operatoren; vor Kauf benannten sichern).</div>
+  <div class="vdict">Verdikt: SPEKULATIV — bester „Momentum + Lag"-Fall, aber ~5 % netto + 6-Wochen-Saison + Erdbebenzone 1 + illiquider Exit → Appreciation-Wette auf ein Trophy-Objekt (10+ J.), kein Cashflow-Play.</div>
+</div>
+
+<div class="mkt watch">
+  <div class="mhead"><h3>7.2 · Milos (Kykladen)</h3>
+    <div class="badges"><span class="chip eu">EU-safe</span><span class="chip amber">SPEKULATIV (lean PASS)</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Stärkste bestätigte Nachfrage — aber Steuer frisst netto.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~3–5 %</div><div class="sub">Brutto-Steuer frisst</div></div>
+    <div class="k"><div class="lbl">Brutto</div><div class="val">~11 %</div><div class="sub">bei €200k</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">56 %</div><div class="sub">bestes im Feld</div></div>
+    <div class="k"><div class="lbl">Google Trends</div><div class="val">4,0×</div><div class="sub">seit 2021, beschleunigend</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR €138,9; Aug-RevPAR +27 % in 3 Jahren (175 → 222); Revenue <strong>€21.915</strong> (höchstes); Listings ~114 flach. Trends 4,0× (66→100 zw. 2024/25). Future-Pacing stark (Buchungsraten €330–390 &gt; ADR €235).</dd>
+    <dt>Katalysator</dt><dd>Santorini/Paros/Chania in STR-Freezes, Milos (temporär) <strong>freeze-befreit</strong> → Kapital + verdrängte Nachfrage; neue Aegean-Route Thessaloniki–Milos ab 06/2026. Flughafen-Ausbau ausgesetzt.</dd>
+    <dt>Preis-Lag</dt><dd>~€3.200/m² zentral. <strong>Nicht billig:</strong> vs. Paros/Naxos (€3.000–4.000) & Kykladen-Ø (€3.870) nur ~15–20 % günstiger. „Halber Santorini-Oia-Preis" = falscher (Super-Prime-)Vergleich.</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Das „flaches Angebot"-Argument ist eine Daten-Illusion — AirROI zählt ~50 Hotels im Bau nicht mit. Milos ist <em>die</em> Insel, auf die Santorini-Verdrängte fliehen → künftige Angebots-Welle. Und Griechenlands STR-Steuer besteuert <em>Brutto</em> minus pauschal 5 % (Management/Nebenkosten nicht absetzbar) → aus ~€20k brutto werden ~€7k netto.</div>
+  <div class="buybox"><strong>Buy-Box:</strong> Pollonia (Premium-NE) oder Adamas (Hafen, beste Logistik). €180–210k (~€200–235k all-in), schlüsselfertiges 2BR 60–80m². <strong>PM auf der Insel UNBESTÄTIGT — der Deal-Killer-Gate.</strong> Benannten Operator mit Insel-Turnover vor Unterschrift sichern.</div>
+  <div class="vdict">Verdikt: SPEKULATIV (lean PASS) — Nachfrage stark und mehrfach bestätigt, aber Qualitäts-/Momentum-Einstieg, keine „billig-für-die-Einnahmen"-Arbitrage; Brutto-Steuer + dünne Liquidität drücken netto unter die reifen Anker.</div>
+</div>
+
+<div class="mkt watch">
+  <div class="mhead"><h3>7.3 · Trapani (Sizilien)</h3>
+    <div class="badges"><span class="chip eu">EU-safe</span><span class="chip amber">WATCH</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Die billige „Call-Option" auf zwei datierte Katalysatoren.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~3–5 %</div><div class="sub">nach 26 % Cedolare Secca</div></div>
+    <div class="k"><div class="lbl">All-in Einsatz</div><div class="val">~€100–130k</div><div class="sub">günstigster im Feld</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">41 %</div><div class="sub">RevPAR 4 J. flach</div></div>
+    <div class="k"><div class="lbl">Frühjahr-Pacing</div><div class="val">+14–16 %</div><div class="sub">YoY (führend, unbewiesen)</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR €43,5; <strong>flach-bis-fallend über 4 Jahre</strong> (Aug 75,9→74,8, unter 2023-Peak); Revenue €7.800; Listings ~755 flach. <strong>Einziges frisches Positiv: Frühjahr 2026 Pacing +14–16 % YoY</strong> — führend, aber noch nicht in Trailing-Zahlen. Trends 'Trapani Sicily' ~1,9× steigend.</dd>
+    <dt>Katalysator</dt><dd><strong>Groß, datiert:</strong> Ryanair 3. sizilianische Base 01/2026 ($200M, 24 Routen, ~1,2 Mio. Pax <strong>+35 %</strong>, Boarding-Steuer gestrichen) + <strong>Nolans IMAX „The Odyssey"</strong> (Dreh Favignana, Trapani = Fähr-Gateway), <strong>Kinostart 17.07.2026</strong>. Beide treffen 2026, <em>vor</em> den Zahlen.</dd>
+    <dt>Preis-Lag</dt><dd>~€926–947/m² Stadt (Centro storico bis €1.310); Apts −2 % YoY. vs. <strong>Cefalù €2.473/m²</strong> → Trapani ~38 % des Preises bei ~47 % der Einnahmen (Preis <em>trackt</em> Einnahmen → nur ~1,2×-Vorteil).</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Billig aus einem <em>Grund</em> — Ryanair hat Trapani schon einmal eröffnet (2009) UND verlassen (2018) nach Beihilfe-Streit; Verkehr brach ~1,5 Mio. ein. Die neue Base ist eine <em>Wieder</em>-Eröffnung desselben subventionsabhängigen Single-Airline-Setups (Ryanair jetzt ~97 % der Kapazität).</div>
+  <div class="buybox"><strong>Buy-Box:</strong> Centro storico ≤500m vom Hafen, fußläufig zu Favignana/Egadi-Fähren (Odyssey-Gateway). ~€75–100k (~€100–130k all-in), renoviertes 2BR, Klimaanlage Pflicht. <strong>PM = CleanBnB</strong> (börsennotiert, bedient Trapani) — Gate bestanden.</div>
+  <div class="vdict">Verdikt: WATCH — größter, am besten datierter Vorwärts-Katalysator + günstigster Einsatz (echte Optionalität), aber steigende Nachfrage <em>unbewiesen</em>. <strong>Kauf-Signal: H2-2026/2027-RevPAR bestätigt die +14–16 %-Frühjahrs-Pacing.</strong></div>
+</div>
+
+<div class="mkt pass">
+  <div class="mhead"><h3>7.4 · Ponta Delgada (São Miguel, Azoren)</h3>
+    <div class="badges"><span class="chip eu">EU-safe</span><span class="chip red">PASS / spekulativ</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Coolcation mit sich schließendem Fenster.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~4,5–5,5 %</div><div class="sub">von 12 % korrigiert</div></div>
+    <div class="k"><div class="lbl">Brutto</div><div class="val">~10–11 %</div><div class="sub">bei ~€200k</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">51 %</div><div class="sub">bestes iberisch</div></div>
+    <div class="k"><div class="lbl">RevPAR-Trend</div><div class="val">+47 %</div><div class="sub">Aug, 3 Jahre</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR €88,3 TTM (Aug-Peak €169); Aug-RevPAR +47 % in 3 Jahren; Revenue €20.385; Listings ~1.400 (wächst). <strong>Aber Google Trends ~1,15× — FLACH</strong> (Such-Leg bestätigt nicht). Ankünfte +9,5 %→+4,5 % (verlangsamend).</dd>
+    <dt>Katalysator</dt><dd><strong>Gemischt:</strong> TAP San Francisco + Wien/Eurowings — <strong>aber Ryanair zog ALLE Azoren-Routen 03/2026 ab (~400k Sitze)</strong> nach 120 % Gebühren-Erhöhung → Low-Cost-Sitzangebot fragil.</dd>
+    <dt>Preis-Lag</dt><dd>~€2.401/m² — <strong>nahe Parität mit Funchal (€2.583)</strong>, Lag überschätzt; +10–13 % YoY, Rekordhochs. Gap vs. Algarve (~40 %) voll durch niedrigere RevPAR + kürzere Saison erklärt → kein Lag.</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Der billige €/m² ist <em>korrekt</em> für eine niedrig-RevPAR, brutal saisonale Single-Airport-Insel bepreist. Der RevPAR-Boom-Motor (billige Sitze) wird gerade abgezogen; Nebensaison-RevPAR rollt bereits über (Apr −13 %, Mai −24 % YoY). Kein staatlicher Erdbeben-Fonds (vulkanisch aktiv).</div>
+  <div class="buybox"><strong>Buy-Box:</strong> PDL-Stadtkern (São Sebastião/José/Pedro) oder Rosto do Cão-Seefront. €180–230k (~€215–260k all-in), renoviertes 1–2BR mit <strong>bestehender AL-Lizenz</strong>. PM = GuestReady (bestanden).</div>
+  <div class="vdict">Verdikt: PASS als Arbitrage / SPEKULATIVE Coolcation-Appreciation-Wette — echtes RevPAR-Wachstum + Klima-Resilienz, aber Fenster schließt (+10–13 % YoY) und Rendite-Kante dünn.</div>
+</div>
+
+<div class="mkt watch">
+  <div class="mhead"><h3>7.5 · Viana do Castelo (Minho, Portugal)</h3>
+    <div class="badges"><span class="chip eu">EU-safe</span><span class="chip amber">SPEKULATIV</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Beste Feasibility — aber der Lizenz-Pfad brach gerade.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~5,5–6,5 %</div><div class="sub">= reife Anker, keine Steigerung</div></div>
+    <div class="k"><div class="lbl">Brutto</div><div class="val">~9 %</div><div class="sub"></div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">38 %</div><div class="sub">nur Viana-Stadt</div></div>
+    <div class="k"><div class="lbl">RevPAR-Trend</div><div class="val">+37 %</div><div class="sub">Aug, 3 Jahre</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>Viana-RevPAR €74; Aug-RevPAR +37 % in 3 Jahren (+35 % letztes Jahr); Revenue €14.703; Listings ~529 flach. <strong>Caminha bestätigt NICHT</strong> (flach-bis-fallend) → nur Viana-Stadt. Trends ~1,5× mild.</dd>
+    <dt>Katalysator</dt><dd><strong>Dreifach:</strong> Coolcation + Porto-Spillover + DL 76/2024 (AL permanent + übertragbar). <strong>ABER der Killer:</strong> Vianas kommunale AL-Verordnung <strong>in Kraft 27.06.2026 fror neue Apartment-AL ein</strong> (Containment-Zone = Prime-Flussfront; Apartment-Modalität stadtweit ausgeschlossen).</dd>
+    <dt>Preis-Lag</dt><dd>€1.728/m² (€2.365 Wohnungen, €1.297 Häuser); +11,1 % YoY (von 18,6 % korrigiert); Porto €4.060 → Viana ~43 % — <strong>aber Gap schließt sich NICHT</strong> (paralleles Wachstum).</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Sekundäre Küstenstadt mit <em>strukturellem</em> ~43 %-von-Porto-Discount (schließt nicht), UND der „kauf-einfach-eine-billige-Flusswohnung-und-Airbnb-sie"-Pfad ist seit 27.06.2026 <strong>gesetzlich geschlossen</strong>.</div>
+  <div class="buybox"><strong>Buy-Box:</strong> (A) Resale-Wohnung mit <em>bestehender übertragbarer</em> AL in Santa Maria Maior/Monserrate/Meadela, ODER (B) freistehende <em>moradia</em> in Außen-Parish (Areosa/Carreço/Afife), wo moradia-AL noch lizenzierbar. €130–165k. PM = uChill / GuestReady (bestanden). <em>Klären: überlebt eine bestehende AL den Eigentümerwechsel?</em></div>
+  <div class="vdict">Verdikt: SPEKULATIV / grenzwertig PASS — beste Feasibility + EU-safe Coolcation, aber ~6 % netto (= reife Anker) und der einfache Lizenz-Pfad brach gerade. Nur über eine <em>bereits lizenzierte</em> Einheit.</div>
+</div>
+
+<h3>Tier 2 — Frontier (hohes Risiko, nur für explizite Risikobereitschaft)</h3>
+
+<div class="mkt pass">
+  <div class="mhead"><h3>7.6 · Saranda (Albanische Riviera)</h3>
+    <div class="badges"><span class="chip frontier">Frontier</span><span class="chip red">WATCH / PASS</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Realer Discount, aber Katalysator verschoben.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto-Rendite</div><div class="val">~4–5 %</div><div class="sub">nicht besser als reife Märkte</div></div>
+    <div class="k"><div class="lbl">Brutto</div><div class="val">~5–9 %</div><div class="sub">TTM / stabilisiert</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">44 %</div><div class="sub">~4-Monats-Saison</div></div>
+    <div class="k"><div class="lbl">Google Trends</div><div class="val">peak 2022</div><div class="sub">seither flach-niedriger</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR ~$51/€47; +46 % 2022–25 (öffentl. Report), aber nur +8 % seit 2023; Revenue ~€6.494 TTM / ~€10,9k stabilisiert. <strong>Google Trends (DE) peakte 2022</strong> (49 in 2026 &lt; 63 in 2022). Albanien: Rekord 12,47 Mio. Ankünfte 2025 (+6,6 %, von +45 % 2023 verlangsamend); Übernachtungen +37,9 %.</dd>
+    <dt>Katalysator</dt><dd>Vlora Intl Airport — <strong>für 2026 annulliert</strong> (Gesellschafter-Streit, SPAK-Antikorruptions-Ermittlung, keine Zertifizierung); auf „nach 2026" verschoben.</dd>
+    <dt>Preis-Lag</dt><dd>Zentral €1.600–1.800/m² (Meerblick €2.200–3.000; +12 % YoY); vs. <strong>Korfu €2.800–4.500</strong> → Saranda ~40–55 %. €/m²-Discount echt, aber auf Revenue-Basis weitgehend geschlossen.</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> Der billige €/m² ist Kompensation für niedrigere Einnahmen + höheres Risiko; <strong>Titel-/Restitutions-/Schwarzbau-Betrugsrisiko</strong> (unabhängiger Anwalt Pflicht — notarielle Urkunde garantiert <em>nicht</em> sauberen Titel); kein institutionelles PM.</div>
+  <div class="buybox"><strong>Buy-Box (nur spekulativ):</strong> Neubau-Meerblick ≤300m von der Lungomare, post-2019-erdbebensicher; ~€120–150k. PM = nur lokale Co-Hosts (PikHost, Saranda Rent — schwach).</div>
+  <div class="vdict">Verdikt: WATCH/PASS — echtes Momentum + €/m²-Discount vs. Korfu, aber STR-Netto ~4–5 % (nicht besser als reife Märkte) und der Katalysator ist unbefristet verschoben. Erst bei fixem Vlora-Kommerz-Betriebsdatum.</div>
+</div>
+
+<div class="mkt pass">
+  <div class="mhead"><h3>7.7 · Kaş / Kalkan (Lykische Küste, Türkei)</h3>
+    <div class="badges"><span class="chip frontier">Frontier</span><span class="chip red">PASS / FX-Wette</span></div></div>
+  <p style="color:var(--text-soft);margin:.2rem 0 .5rem">Währungs-Illusion mit exzellentem PM.</p>
+  <div class="kpi">
+    <div class="k"><div class="lbl">Netto (Apartment)</div><div class="val">~3–5 %</div><div class="sub">in TRY</div></div>
+    <div class="k"><div class="lbl">Brutto (Apt)</div><div class="val">~6–9 %</div><div class="sub">villa-Ø überschätzt</div></div>
+    <div class="k"><div class="lbl">Occupancy</div><div class="val">38 %</div><div class="sub">Eigennutzer-Markt</div></div>
+    <div class="k"><div class="lbl">Property-Mgmt</div><div class="val">Stark</div><div class="sub">viele benannte Firmen</div></div>
+  </div>
+  <dl>
+    <dt>Demand</dt><dd>RevPAR $95,9/€88,8 (villa-verzerrt); Aug-RevPAR +25 % in 3 J. Hartwährung; Revenue $14.138 (villa-inflationiert); Listings ~3.434 flach. <strong>Trends 'Kalkan' peakte 2022, weichte 86→82; Dalaman-Pax tatsächlich −1 % 2025</strong> (Scorecard's +7,1 % war die 2024-Zahl — korrigiert).</dd>
+    <dt>Katalysator</dt><dd>Dalaman 5,58 Mio. Pax + Jet2 88 Wochenflüge; weiche-Lira-FX-Arbitrage (zweischneidig).</dd>
+    <dt>Preis-Lag</dt><dd>€1.300–2.200/m²; 2BR-Apt €110–150k; vs. Bodrum €2.500–4.000, Korfu/Rhodos €2.800–4.500. Kalkan-Apts ~40–55 % von Korfu/Rhodos.</dd>
+  </dl>
+  <div class="haken"><strong>Der Haken:</strong> <strong>Währungs-Illusion</strong> — die weiche Lira verbilligt Einstieg UND Einkommen im gleichen Maße. Plus: für Apartments <strong>max. 25 % der Einheiten/Gebäude als STR erlaubt UND einstimmige Zustimmung ALLER Miteigentümer</strong> nötig (ein Nachbar vetot deine Genehmigung — für einen Fern-Eigentümer nicht managebar).</div>
+  <div class="buybox"><strong>Buy-Box:</strong> Kalkan (Kışla, Meerblick) — <strong>nur in einem Komplex mit bereits gültiger STR-Genehmigung</strong>, nicht am 25 %-Cap, mit ausgerichteten Miteigentümern. €110–150k. PM STARK (Escapade/Kalkan Exclusive, Kalkan Holidays u. a.).</div>
+  <div class="vdict">Verdikt: PASS als Rendite-Arbitrage / SPEKULATIVE FX-Wette — Demand real und PM exzellent, aber Hartwährungs-Rendite matcht nur die sichere EU-Baseline bei schwerem TRY-/Politik-/Klima-Risiko. Nur wenn Florian <em>explizit</em> Lira-Rebound-Upside will.</div>
+</div>
+</section>
+
+<!-- ============ 8. WATCHLIST ============ -->
+<section id="watchlist">
+<h2>8 · Watchlist &amp; Kauf-Signale (das Framework als Radar)</h2>
+<p>Die stärkste risiko-adjustierte Empfehlung ist <strong>nicht</strong>, heute einen der obigen mittelmäßigen Deals zu kaufen — sondern das Katalysator-Framework als <strong>Monitoring-System</strong> zu betreiben und zuzuschlagen, wenn ein <em>konkretes</em> Signal feuert.</p>
+<table>
+<thead><tr><th>Markt (Land)</th><th>Warum auf der Watchlist</th><th>Konkretes Kauf-Signal</th></tr></thead>
+<tbody>
+<tr class="hlrow"><td><strong>Trapani</strong> (IT)</td><td>Bereits validiert; billigste Call-Option</td><td>H2-2026-Trailing-RevPAR bestätigt +14–16 % Frühjahrs-Pacing</td></tr>
+<tr><td><strong>Kalamata / Messinia</strong> (GR)</td><td>Tier-1-Transport: 40-J.-Flughafen-Konzession 06/2026 (Fraport), +€75M Terminal, Golden-Visa-€400k-Tier</td><td>Neue Ryanair/easyJet-Routen bestätigt + RevPAR-Anstieg in Koroni/Pylos vor Preis-Reaktion</td></tr>
+<tr><td><strong>Naxos</strong> (GR)</td><td>Santorini-Cap-Spillover <em>messbar</em>: Revenue &gt; reifes Korfu bei billigerem €/m²</td><td>Bestätigen, dass €/m² noch &lt;Korfu bei weiter steigendem Pacing (Fenster evtl. eng)</td></tr>
+<tr><td><strong>Lago d'Iseo / Orta</strong> (IT)</td><td>Coolcation-Alpensee, Bruchteil von Como/Garda</td><td>RevPAR-Slope + Sommer-Occupancy steigend bei stabilem €/m²</td></tr>
+<tr><td><strong>Évora</strong> (PT)</td><td>European Capital of Culture 2027, UNESCO, €1.590/m², EU-safe</td><td>Übernachtungs-Statistiken 2026 vor dem Titeljahr; AL-Verfügbarkeit prüfen</td></tr>
+<tr><td><strong>Bulgarien Schwarzmeer / Bansko</strong></td><td>Euro-Adoption 01/2026 (Kroatien-Template), €1.100–1.650/m²</td><td>Post-Euro Ausländer-Käufer-Anteil steigt; RevPAR/Ankünfte inflektieren</td></tr>
+<tr><td><strong>Kap Verde (Sal/Boa Vista)</strong></td><td>Escudo an € gepeggt (kein FX-Risiko), easyJet-Neustart 2025, RIU-Kapital</td><td>Neue Route-Ramp bestätigt + PM-Tiefe verifiziert</td></tr>
+<tr><td><strong>Taghazout/Agadir</strong> (MA)</td><td>Ryanairs Rekord-Marokko-Programm S26, WM 2030</td><td>Foreign-Ownership + PM-Gate klären; Frontier-Risiko</td></tr>
+</tbody>
+</table>
+<p style="font-size:13px;color:var(--text-soft)"><em>Die vollständige 69-Kandidaten-Longlist inkl. aller gescreenten Mikromärkte liegt in den Workflow-Rohdaten und kann als Anhang exportiert werden.</em></p>
+</section>
+
+<!-- ============ 9. DROPS ============ -->
+<section id="drops">
+<h2>9 · Was gut aussah, aber durchfiel (die lehrreichen DROPs)</h2>
+<p>Diese zu dokumentieren verhindert, dass man denselben Kandidaten später wieder hinterherjagt. Alle mit harten Daten validiert und durchgefallen:</p>
+<table>
+<thead><tr><th>Markt</th><th>Warum es verlockend war</th><th>Warum es durchfiel (harte Daten)</th></tr></thead>
+<tbody>
+<tr><td><strong>Batumi</strong> (Georgien)</td><td>Beworbene „15–25 % Brutto", $1.290/m², Wizz-Base</td><td><strong>15–25 % = Entwickler-Marketing.</strong> RevPAR flach-fallend (Jul $36,7→$28,7→$31,8), Occ 38 %, Listings verdoppelt auf ~6.150. Real ~8 % brutto / 4–6 % netto. Ungepeggte GEL, EU-Beitritt bis 2028 ausgesetzt, Russland-Nähe. <span class="chip red">DROP</span></td></tr>
+<tr><td><strong>Ulcinj / Bar</strong> (Montenegro)</td><td>„Sauberster" Frontier: euroisiert (kein FX-Risiko), 40–50 % billiger als Budva/Kotor</td><td>RevPAR <strong>fällt</strong> seit 2023; Trends flach (0,94×); Revenue-Gap trackt Preis-Gap 1:1 → kein Lag. Netto ~4–5,5 %, dünnes PM im Süden. <span class="chip red">DROP</span></td></tr>
+<tr><td><strong>Vlora / Dhërmi–Himarë</strong> (Albanien)</td><td>Der „richtige" Flughafen-Katchment-Knoten; Chair Zürich–Vlora 06/2026</td><td><strong>Katalysator misslungen:</strong> Flughafen unzertifiziert, Chair-Route für 2026 <em>annulliert</em>. Kein Preis-Lag (Dhërmi ≥ Saranda). Netto ~2–3,5 %. <span class="chip red">DROP</span></td></tr>
+<tr><td><strong>Silver Coast</strong> (Ericeira/Nazaré/Peniche)</td><td>Coolcation + Weltklasse-Surf, 1h von Lissabon</td><td><strong>Nachfrage NICHT steigend</strong> (Trends flach: Ericeira 1,17×, Peniche 0,86×); <strong>Ericeira +35 % Aufschlag zur Algarve</strong>; Winter-Fill ~0–3 %. Netto ~2,5–3,5 %. <span class="chip red">DROP</span></td></tr>
+<tr><td><strong>Rías Baixas / Sanxenxo</strong> (Spanien)</td><td>Boomende Ankünfte (Rekordjahre, +10,5 %), grüner kühler Atlantik</td><td>Trotz Makro-Boom: RevPAR/Einheit flach-fallend; Preis auf Med-Niveau → <strong>~3,4 % brutto / ~1,3–2 % netto</strong> (Prestige-Zweitwohnsitz); + spanische STR-Verschärfung 2025. <span class="chip red">DROP</span></td></tr>
+<tr><td><strong>Bagnara/Palmi</strong> (Kalabrien)</td><td>Billiger als Scilla (−35–45 %), gleicher Katalysator</td><td>Faire Kompensation für ~⅓ der Einnahmen; <strong>Preise FALLEN</strong> (Palmi −5,7 %, Bagnara −11,7 % YoY); netto ~2–3 %; Erdbebenzone 1 + 'Ndrangheta-Risiko. <span class="chip red">DROP</span> (Value-Trap)</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 10. EMPFEHLUNG ============ -->
+<section id="empfehlung">
+<h2>10 · Empfehlung für Florian</h2>
+<div class="callout crit">
+  <p><strong>Die ehrliche Bottom-Line, ohne Beschönigung:</strong> Deine bestehenden reifen Anker (Albufeira / Ostuni / Chania, ~7–10 % netto, in EU-Recht, mit tiefer Liquidität) sind risiko-adjustiert <strong>schwer zu schlagen</strong>. Der „Emerging-Markets-Steal" existiert 2026 im validierten Feld nicht als sofortiger Deal. Wer hier investiert, akzeptiert eine <em>Appreciation-Wette</em> — nicht eine höhere Cashflow-Rendite.</p>
+</div>
+<h3>Konkret, nach Präferenz</h3>
+<ol>
+<li><strong>Wenn du diszipliniert bleiben willst (meine Empfehlung):</strong> Behalte den v3.1-Plan (Albufeira/Ostuni) als Cashflow-Investment und betreibe das §6-Framework als <strong>Radar</strong>. Ich überwache die Top-Watchlist-Trigger (§8) monatlich und alarmiere dich, wenn ein <em>konkretes</em> Signal feuert. Dann kaufst du <em>ins Signal</em>, nicht in die Hoffnung.</li>
+<li><strong>Wenn du eine billige, asymmetrische Wette willst:</strong> <strong>Trapani</strong> — ~€100–130k all-in, zwei große datierte Katalysatoren (Ryanair-Base +35 % + Nolan-„Odyssey" 07/2026), CleanBnB als PM. Kleiner Einsatz, echte Optionalität. <em>Aber warte auf H2-2026-RevPAR-Bestätigung.</em></li>
+<li><strong>Wenn dir Klima-Resilienz über 15+ Jahre am wichtigsten ist:</strong> <strong>Ponta Delgada</strong> oder <strong>Viana</strong> (EU-safe Coolcation) — aber nur über eine <em>bereits lizenzierte</em> Einheit, im Wissen, dass die Netto-Rendite deine reifen Anker nicht übertrifft.</li>
+<li><strong>Frontier (Saranda/Kaş) nur</strong>, wenn du explizit Kapital-Appreciation/FX-Upside jagst und das Titel-/Währungs-/Liquiditätsrisiko bewusst trägst — nicht als Rendite-Play.</li>
+</ol>
+<h3>Nächste Schritte, die ich übernehmen kann</h3>
+<ul class="actionlist">
+<li><strong>Monatliches Katalysator-Monitoring</strong> als geplanten Task (Trapani-RevPAR, Kalamata-Routen, Vlora-Zertifizierung, Bulgarien-Post-Euro).</li>
+<li><strong>Tiefen-Validierung eines Kandidaten</strong> (z. B. Trapani oder Kalamata) mit konkreten Objekt-Listings, PM-Angeboten und einem präzisen Cashflow-Modell im v3.1-Stil.</li>
+<li><strong>Deploy dieser Website</strong> auf GitHub Pages (wie v3.1), damit sie teilbar ist.</li>
+</ul>
+</section>
+
+<!-- ============ 11. LIMITS ============ -->
+<section id="limits">
+<h2>11 · Was nicht getan wurde (ehrliche Limits)</h2>
+<ul>
+<li><strong>Adversariale Runde 2 unvollständig:</strong> Die 6 Runde-2-Scorecards (§9) sind voll validiert, aber die zweite Skeptiker-Stufe traf das Session-Limit. Die Daten-Verdikte stehen; die Richtung ist eindeutig (alle DROP).</li>
+<li><strong>Keine objekt-genaue Due-Diligence:</strong> Markt-/Mikromarkt-Ebene, nicht Einzelobjekt. Buy-Boxes geben Sub-Areas und Zielpreise, keine konkreten Listings.</li>
+<li><strong>FX-Annahme:</strong> Nicht-Euro-Märkte bei ~1 € = 1,08 USD konvertiert; reale Raten schwanken.</li>
+<li><strong>AirROI-Frontier-Abdeckung dünn:</strong> Albanien/Georgien-Historien starten teils erst 2024/25 → niedrigere Konfidenz (explizit markiert).</li>
+<li><strong>Google Trends ≠ Buchungen:</strong> Such-Slope ist ein Nachfrage-Proxy; wo Trends und AirROI divergierten, wurde AirROI priorisiert.</li>
+<li><strong>Keine Steuer-Struktur-Optimierung:</strong> Holding-Strukturen könnten Netto-Renditen verschieben — separate Analyse mit Anwalt nötig.</li>
+</ul>
+</section>
+
+<!-- ============ 12. QUELLEN ============ -->
+<section id="quellen">
+<h2>12 · Quellen</h2>
+<ul>
+<li><strong>AirROI MCP</strong> (Live, 01.07.2026) — Market Summary, RevPAR-Zeitreihen, Future-Pacing, Active Listings (26 Märkte)</li>
+<li><strong>DataForSEO / Google Trends MCP</strong> (Live) — 5-Jahres-Nachfrage-Slopes</li>
+<li><strong>WebSearch/WebFetch</strong> (~1.000 Tool-Calls): Airline-Newsrooms (Ryanair/Wizz/Jet2), anna.aero, ch-aviation; Flughafen-Betreiber & Ministerien (Vlora, Kastelli, Tivat/Podgorica, Kalamata); EU-VO 2024/1028 & nationale STR-Register (PT DL 76/2024, IT CIN, GR AMA/AADE, ES RD 1312/2024); Overtourism-Regulatorik (Barcelona, Santorini, Venedig, Dubrovnik, Palma, Amsterdam, Viana); Immobilien-Portale (idealista, immobiliare.it, spitogatos); Global Property Guide (Batumi), TBC Capital/GALT (Georgien), ETC (Coolcation)</li>
+<li><strong>v3.1 Reine Payback-Analyse</strong> (Baseline-Anker)</li>
+</ul>
+<div class="disclaimer">
+<strong>Disclaimer.</strong> Dieser Report ist private Investment-Research zu Informationszwecken und stellt <em>keine</em> Anlage-, Steuer- oder Rechtsberatung dar. Alle Rendite-, Netto- und Katalysator-Zahlen basieren auf Modellannahmen, Live-Marktdaten (Stand Juli 2026) und Web-Recherche; künftige Erträge, Belegungsquoten, Steuern und Immobilienpreise können erheblich abweichen. Lokale Steuerberater und Anwälte sind vor jeder Investition zu konsultieren — insbesondere in Frontier-Märkten (Titel-Due-Diligence). &nbsp;·&nbsp; Erstellt 2026 von Maya · Version v5 — Momentum-Arbitrage-Scan · durchgeführt als 2-Runden Multi-Agent-Workflow (~50 Agenten, ~5,3 Mio. Tokens, ~1.000 Live-Tool-Calls). <strong>Kernbefund: Der Markt ist effizient — kein validierter „billig-für-die-Einnahmen"-Steal; das Framework ist der Wert, nicht eine Kaufliste.</strong>
+</div>
+</section>
+</main>
+</div>
+
+<script>
+const FONT = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const tick = isDark ? '#aab4c2' : '#52606d';
+const grid = isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)';
+Chart.defaults.font.family = FONT;
+Chart.defaults.color = tick;
+
+// ---- Chart 1: net yield of survivors vs mature-anchor band (7-10%) ----
+const yMkts = ['Viana','Scilla','Ponta Delgada','Saranda','Milos','Trapani','Kaş/Kalkan'];
+const yNet  = [6.0, 5.0, 5.0, 4.5, 4.0, 4.0, 4.0]; // midpoints of net-yield ranges
+const yCol  = yMkts.map(()=>'#486581');
+new Chart(document.getElementById('chartYield'),{
+  type:'bar',
+  data:{ labels:yMkts, datasets:[{ label:'Netto-Rendite (Mittelwert, %)', data:yNet,
+    backgroundColor:yCol, borderRadius:5 }] },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>'Netto ~'+ctx.parsed.x+' %'}},
+      annotation:{ annotations:{
+        band:{ type:'box', xMin:7, xMax:10, backgroundColor:'rgba(212,160,23,.16)', borderColor:'rgba(212,160,23,.5)', borderWidth:1,
+          label:{display:true,content:'Reife Anker 7–10 %',position:'end',color:tick,font:{size:11}} }
+      }} },
+    scales:{ x:{ beginAtZero:true, max:11, title:{display:true,text:'Netto-Rendite (%)'}, grid:{color:grid}, ticks:{color:tick} },
+      y:{ grid:{display:false}, ticks:{color:tick} } } }
+});
+
+// ---- Chart 2: demand momentum (3yr Aug-RevPAR growth) ----
+const mMkts = ['Ponta Delgada','Scilla','Viana','Milos','Kaş/Kalkan','Saranda','Trapani'];
+const mVal  = [47, 43, 37, 27, 25, 8, 0];
+new Chart(document.getElementById('chartMomentum'),{
+  type:'bar',
+  data:{ labels:mMkts, datasets:[{ label:'August-RevPAR-Wachstum 3 Jahre (%)', data:mVal,
+    backgroundColor:mVal.map(v=>v>=20?'#5cb85c':(v>=8?'#f0ad4e':'#d9534f')), borderRadius:5 }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>(ctx.parsed.y===0?'flach (0 %)':'+' + ctx.parsed.y + ' %')}} },
+    scales:{ y:{ beginAtZero:true, title:{display:true,text:'RevPAR-Wachstum 3 J. (%)'}, grid:{color:grid}, ticks:{color:tick} },
+      x:{ grid:{display:false}, ticks:{color:tick, maxRotation:35, minRotation:0} } } }
+});
+</script>
+</body>
+</html>
