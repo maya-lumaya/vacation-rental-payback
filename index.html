@@ -133,7 +133,7 @@ details.glossary[open] summary{margin-bottom:.4rem}
   <h1>Vacation Rentals&nbsp;– Pure Payback Analysis</h1>
   <p class="sub">From what year does a vacation rental earn back its entire initial investment from operating net cashflow alone? &nbsp;·&nbsp; 6 EU markets · AirROI data TTM Apr&nbsp;2025–Apr&nbsp;2026 · As of July&nbsp;2026</p>
   <div class="callout">
-    <p><strong>The single question:</strong> How many years of rental income does it take until purchase price&nbsp;+&nbsp;closing&nbsp;+&nbsp;furnishing are recovered? No ETF, no compounding, no capital-market assumption — just the fundamentals of the property.</p>
+    <p><strong>The single question:</strong> How many years of rental income does it take until purchase price&nbsp;+&nbsp;closing&nbsp;+&nbsp;furnishing are recovered? Just the fundamentals of the property — net rent measured against the money you put in.</p>
   </div>
 </header>
 
@@ -197,8 +197,8 @@ details.glossary[open] summary{margin-bottom:.4rem}
 </tbody>
 </table>
 
-<div class="callout good"><p><strong>1 · Payback = net initial yield.</strong> Without the ETF compounding, the ranking collapses exactly onto the net initial yield. If you want your money back fast, buy where the annual cashflow relative to purchase price is highest. Albufeira (9.7 %) and Ostuni (8.8 %) lead clearly.</p></div>
-<div class="callout"><p><strong>2 · Rethymno overtakes Chania.</strong> On a pure payback basis, the more capital-efficient Rethymno (€174k initial) edges ahead of Chania. In the ETF variant (v3) it was the other way around — that effect is now gone. Chania's argument is not payback but the best climate profile (risk 4.3) for a long hold.</p></div>
+<div class="callout good"><p><strong>1 · Payback = net initial yield.</strong> The ranking collapses exactly onto the net initial yield: if you want your money back fast, buy where the annual cashflow relative to purchase price is highest. Albufeira (9.7 %) and Ostuni (8.8 %) lead clearly.</p></div>
+<div class="callout"><p><strong>2 · Rethymno overtakes Chania.</strong> On a pure payback basis, the more capital-efficient Rethymno (€174k initial) edges ahead of Chania. Chania's argument is not payback but the best climate profile (risk 4.3) for a long hold.</p></div>
 <div class="callout warn"><p><strong>3 · Lagos &amp; Polignano are payback laggards.</strong> Net yields of 5.6 % and 4.5 % mean 16–20 years of pure cashflow payback. Both only work via resale, not via rental income.</p></div>
 </section>
 
@@ -209,18 +209,7 @@ details.glossary[open] summary{margin-bottom:.4rem}
 <h3>Core definition (nominal, undiscounted)</h3>
 <div class="formula">Cumulative cashflow through year N:  CumCF_N = Σ CF_i   (i = 1 … N)
 Cashflow payback = smallest N where  CumCF_N ≥ initial investment</div>
-<p>No <code>(1+r)</code> factor, no reinvestment — every euro of cashflow counts as exactly one euro. Payback therefore depends <em>only</em> on the fundamentals of the property (net rent ÷ investment) and makes no assumption about a capital market that no one controls.</p>
-
-<div class="removed">
-  <h4>What was removed versus v3 (MSCI EM payback)</h4>
-  <ul>
-    <li>❌ <strong>MSCI EM reinvestment logic</strong> — cashflow flows into no ETF; it is simply accumulated.</li>
-    <li>❌ <strong>CAGR scenarios (5 % / 7 % / 9 %)</strong> — no compounding, so no range needed.</li>
-    <li>❌ <strong>Geopolitical thesis</strong> (US housing, AI bubble, Hormuz/petrodollar) — belongs to the question "what to do with the cashflow", not to the payback question.</li>
-    <li>❌ <strong>Wealth projections via the ETF pot</strong> — replaced by the cumulative cashflow sum.</li>
-  </ul>
-  <p style="margin:.4rem 0 0"><strong>Retained:</strong> market screening, regulation/taxes, climate risks, scoring matrix, deep dives, exit strategy — version-independent and still valid.</p>
-</div>
+<p>Every euro of cashflow counts as exactly one euro — no interest, no growth factor. Payback therefore depends <em>only</em> on the fundamentals of the property (net rent ÷ investment) and makes no assumption about any market that no one controls.</p>
 
 <h3>Second metric: break-even with sale</h3>
 <div class="formula">NetSale_N = purchase price × 1.02^N × 0.95 − capital-gains tax (35 % on gain, only if N < 10)
@@ -263,6 +252,15 @@ Break-even = smallest N where  CumCF_N + NetSale_N ≥ initial investment</div>
 <section id="screening">
 <h2>3 · Market Screening — 28 Cities (TTM Apr 2025 – Apr 2026)</h2>
 <p>Data source: AirROI MCP. The 6 finalists are highlighted.</p>
+<div class="callout" style="font-size:13px">
+<strong>Column legend:</strong>
+<strong>ADR</strong> = average daily rate (avg. nightly price on booked nights) &nbsp;·&nbsp;
+<strong>Occ</strong> = occupancy (share of available nights booked) &nbsp;·&nbsp;
+<strong>RevPAR</strong> = revenue per available room (ADR × Occ) &nbsp;·&nbsp;
+<strong>Annual rev.</strong> = gross annual revenue of a typical listing &nbsp;·&nbsp;
+<strong>Listings</strong> = active short-term-rental listings in the market &nbsp;·&nbsp;
+<strong>Note</strong> = qualitative remark or flag
+</div>
 
 <h3>Portugal (Algarve + Lisbon)</h3>
 <table>
@@ -379,7 +377,7 @@ Break-even = smallest N where  CumCF_N + NetSale_N ≥ initial investment</div>
 <!-- ============ 7. PAYBACK DEEP DIVE ============ -->
 <section id="payback">
 <h2>7 · Pure Cashflow Payback — Deep Dive</h2>
-<p>Every net cashflow is simply accumulated. We look for the year in which the cumulative sum reaches the initial investment. No reinvestment, no interest.</p>
+<p>Every net cashflow is simply accumulated. We look for the year in which the cumulative sum reaches the initial investment. No interest, no growth factor — every euro counts once.</p>
 
 <div class="chartbox">
   <h4>Cumulative net cashflow over 20 years</h4>
@@ -456,12 +454,12 @@ Break-even = smallest N where  CumCF_N + NetSale_N ≥ initial investment</div>
 <li><strong>Nominal payback is the default</strong> — those who value opportunity cost heavily should use the discounted column (§7).</li>
 <li><strong>No holding-structure optimisation</strong> — could save 5–8 % tax and improve payback (separate legal analysis).</li>
 <li><strong>Own use not modelled</strong> — 1–2 weeks/year of personal use lowers occ by ~3–5 % and lengthens payback.</li>
-<li><strong>What happens to the cashflow after payback is deliberately out of scope</strong> — that was the question of the previous version (ETF reinvestment) and was intentionally removed here.</li>
+<li><strong>What happens to the cashflow after payback is deliberately out of scope</strong> — this report answers only when the money comes back, not what you do with it afterwards.</li>
 </ul>
 <p><strong>Sources:</strong> AirROI MCP (TTM Apr 2025–Apr 2026), DataForSEO (Q1 2026), Open-Meteo (ERA5 + CMIP6), Tranio / Idealista / Immobiliare.it (asking prices Q1 2026), Autoridade Tributária PT, Agenzia Entrate IT, AADE Greece (Law 5170/2025), § 23 EStG, EU Regulation 2024/1028, NOAA Coastal Erosion Reports.</p>
 
 <div class="disclaimer">
-<strong>Disclaimer.</strong> This report is private investment research for informational purposes and does <em>not</em> constitute investment, tax or legal advice. All cashflow, payback and climate figures are based on model assumptions and historical data (as of May–July 2026); future returns, occupancy rates, taxes and property prices may differ materially. Local tax advisors and lawyers should be consulted before any investment. &nbsp;·&nbsp; Prepared 2026 by Maya · Version v3.1 — pure cashflow payback analysis, derived from v3 by removing the ETF reinvestment concept.
+<strong>Disclaimer.</strong> This report is private investment research for informational purposes and does <em>not</em> constitute investment, tax or legal advice. All cashflow, payback and climate figures are based on model assumptions and historical data (as of May–July 2026); future returns, occupancy rates, taxes and property prices may differ materially. Local tax advisors and lawyers should be consulted before any investment. &nbsp;·&nbsp; Prepared 2026 by Maya · Version v3.1 — pure cashflow payback analysis.
 </div>
 </section>
 </main>
